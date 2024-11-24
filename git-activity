@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
 # git-activity
-# v1.0.0-beta.1
 # https://github.com/olets/git-activity
 # Copyright (©) 2017-present Henry Bley-Vroman
 
@@ -86,6 +85,10 @@ __git_activity_show() {
   fi
 }
 
+__git_activity_version() {
+  printf "1.0.0-beta.1\\n"
+}
+
 main() {
   if ! [ -f "$GIT_ACTIVITY_LOG_PATH" ]; then
     touch "$GIT_ACTIVITY_LOG_PATH"
@@ -104,6 +107,11 @@ main() {
     show)
       shift
       __git_activity_show "$@"
+      ;;
+    --version|\
+    -v)
+      shift
+      __git_activity_version
       ;;
     *)
       'builtin' 'printf' "Unsupported option %s\\n" "$1"
