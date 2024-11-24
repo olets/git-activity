@@ -64,7 +64,7 @@ __git_activity_record() {
   'builtin' 'printf' "Git activity log: %s recorded\\n" "$activity"
 }
 
-__git_activity_see() {
+__git_activity_show() {
   local date_format
 
   date_format="+%Y-%m-%d"
