@@ -23,10 +23,10 @@ __git_activity_postcheckout() {
     # the branch doesn't appear in the reflog
     # N.B: means `git switch -c new && git checkout - && git switch -c new`
     #  only registers the first creation
-    [ "$(git reflog --date=local | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ] && \
+    [ "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ] && \
     # and the current branch isn't tracking a remote branch
-    [ -z "$(git config branch."$(git rev-parse --abbrev-ref @)".merge)" ] ); then
-    __git_activity_log create
+    [ -z "$(git rev-parse @{u} 2>/dev/null)" ] ); then
+    __git_activity_record create
   fi
 }
 
