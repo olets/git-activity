@@ -40,7 +40,7 @@ __git_activity_postcheckout() {
   fi
 }
 
-__git_activity_log() {
+__git_activity_record() {
   local activity branch date existing_content_without_headers message repo sha
 
   activity="$*"
@@ -57,11 +57,11 @@ __git_activity_log() {
 
   existing_content_without_headers=$(tail -n +2 "$GIT_ACTIVITY_LOG_PATH" | tail -r | tail -n +2 | tail -r)
 
-  printf "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
-  printf "$date\\t$repo \\t$branch\\t$message\\t$sha\\t$activity\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  printf "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  printf "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  printf "Git activity log: %s logged\\n" "$activity"
+  'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "$date\\t$repo \\t$branch\\t$message\\t$sha\\t$activity\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "Git activity log: %s recorded\\n" "$activity"
 }
 
 __git_activity_see() {
@@ -82,7 +82,7 @@ __git_activity_see() {
   if [ -n "$activity" ]; then
     grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
   else
-    printf "No git activity logged %s\\n" "$*"
+    'builtin' 'printf' "No git activity recorded %s\\n" "$*"
   fi
 }
 
