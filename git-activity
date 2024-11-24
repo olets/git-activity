@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # git-activity
 # https://github.com/olets/git-activity
@@ -18,19 +18,19 @@ __git_activity_postcheckout() {
   first_appearance_in_reflog=false
   no_tracking_branch=false
 
-  if [ "$#" -ne 3 ]; then
+  if (( "$#" != 3 )); then
     return
   fi
 
-  if [ "$3" -eq 0 ]; then
+  if (( "$3" == 0 )); then
     return
   fi
 
-  if [ "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ]; then
+  if (( "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" == 1 )); then
     first_appearance_in_reflog=true
   fi
 
-  if [ -z "$(git rev-parse @{u} 2>/dev/null)" ]; then
+  if [[ -z "$(git rev-parse @{u} 2>/dev/null)" ]]; then
     no_tracking_branch=true
   fi
 
@@ -44,7 +44,7 @@ __git_activity_record() {
 
   activity="$*"
 
-  if ! [ -n $activity ]; then
+  if [[ -z $activity ]]; then
     return
   fi
   
@@ -68,9 +68,9 @@ __git_activity_show() {
 
   date_format="+%Y-%m-%d"
 
-  if [ "$1" = "all" ]; then
+  if [[ "$1" == "all" ]]; then
     log_date=2
-  elif [ -n "$*" ]; then
+  elif [[ -n "$*" ]]; then
     log_date=$(gdate "$date_format" -d "$*")
   else
     log_date=$(gdate "$date_format")
@@ -78,7 +78,7 @@ __git_activity_show() {
 
   activity=$(grep ^"$log_date" "$GIT_ACTIVITY_LOG_PATH")
 
-  if [ -n "$activity" ]; then
+  if [[ -n "$activity" ]]; then
     grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
   else
     'builtin' 'printf' "No git activity recorded %s\\n" "$*"
@@ -90,7 +90,7 @@ __git_activity_version() {
 }
 
 main() {
-  if ! [ -f "$GIT_ACTIVITY_LOG_PATH" ]; then
+  if ! [[ -f "$GIT_ACTIVITY_LOG_PATH" ]]; then
     touch "$GIT_ACTIVITY_LOG_PATH"
     echo "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
   fi
