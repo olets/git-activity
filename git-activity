@@ -96,7 +96,7 @@ main() {
   fi
 
   case $1 in
-    postcheckout)
+    post-checkout)
       'builtin' 'shift'
       __git_activity_postcheckout "$@"
       ;;
