@@ -10,7 +10,7 @@
 
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
-__git_activity_log () {
+__git_activity_log() {
   local activity branch date existing_content_without_headers message repo sha
 
   activity="$*"
@@ -34,7 +34,7 @@ __git_activity_log () {
   printf "Git activity log: %s logged\\n" "$activity"
 }
 
-__git_activity_see () {
+__git_activity_see() {
   local date_format
 
   date_format="+%Y-%m-%d"
