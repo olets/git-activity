@@ -20,12 +20,12 @@ __git_activity_postcheckout() {
   fi
 
   if ( \
-    # if the previous and new HEADs are the same
-    [ "$1" = "$2" ] && \
-    # and the current branch has only been checked out once
-    [ "$(git reflog --date=local | grep -o "$(git symbolic-ref --short HEAD)" | wc -l)" -eq 1 ] && \
+    # the branch doesn't appear in the reflog
+    # N.B: means `git switch -c new && git checkout - && git switch -c new`
+    #  only registers the first creation
+    [ "$(git reflog --date=local | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ] && \
     # and the current branch isn't tracking a remote branch
-    [ -z "$(git config branch."$(git symbolic-ref --short HEAD)".merge)" ] ); then
+    [ -z "$(git config branch."$(git rev-parse --abbrev-ref @)".merge)" ] ); then
     __git_activity_log create
   fi
 }
