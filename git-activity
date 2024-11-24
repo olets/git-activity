@@ -1,0 +1,74 @@
+#!/usr/bin/env sh
+
+# git-activity
+# v1.0.0-beta.1
+# https://github.com/olets/git-activity
+# Copyright (©) 2017-present Henry Bley-Vroman
+
+LOG_FILE="$HOME"/git-activity.csv
+
+__git_activity_log () {
+  __git_activity_prepend () {
+    tmp_prepended=$(mktemp "$TMPDIR"/log-git-activity_temp)
+    printf "$@"|cat - "$LOG_FILE" > "$tmp_prepended"
+    mv "$tmp_prepended" "$LOG_FILE"
+  }
+
+  
+  DATE=$(date +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
+  REPO=$(basename "$(git rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  MESSAGE=$(git log -1 --pretty=%s)
+  SHA=$(git rev-parse --short HEAD)
+  ACTIVITY="$*"
+  HEADING="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY\\n"
+
+  if [ -e "$LOG_FILE" ]
+  then
+    tmp_trimmed=$(mktemp "$TMPDIR"/trimmed)
+    tail -n +2 "$LOG_FILE" > "$tmp_trimmed" && mv "$tmp_trimmed" "$LOG_FILE"
+  else
+    printf "$HEADING" > "$LOG_FILE"
+  fi
+
+  __git_activity_prepend "%s\\t%s\\t%s\\t%s\\t%s\\t%s\\n" "$DATE" "$REPO" "$BRANCH" "$MESSAGE" "$SHA" "$ACTIVITY"
+  __git_activity_prepend "$HEADING"
+
+  if [ -n "$ACTIVITY" ]
+  then
+    printf "Git activity log: %s logged\\n" "$ACTIVITY"
+  fi
+}
+
+__git_activity_see () {
+  DATE_FORMAT="+%Y-%m-%d"
+
+  if [ "$1" = "all" ]
+  then
+    log_date=2
+  elif [ -n "$*" ]
+  then
+    log_date=$(gdate "$DATE_FORMAT" -d "$*")
+  else
+    log_date=$(gdate "$DATE_FORMAT")
+  fi
+
+  activity=$(grep ^"$log_date" "$LOG_FILE")
+  if [ -n "$activity" ]
+  then
+    grep -E "^($log_date|DATE)" "$LOG_FILE" | tail -r | column -ts '	' | less -NQS
+  else
+    printf "No git activity logged %s\\n" "$*"
+  fi
+}
+
+main() {
+  local action
+  action="$1"
+  shift
+  echo $action
+  echo $@
+  __git_activity_$action "$@"
+}
+
+main "$@"
