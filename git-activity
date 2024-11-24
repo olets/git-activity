@@ -87,18 +87,29 @@ __git_activity_show() {
 }
 
 main() {
-  local action
-
-  action="$1"
-
-  shift
-
   if ! [ -f "$GIT_ACTIVITY_LOG_PATH" ]; then
     touch "$GIT_ACTIVITY_LOG_PATH"
     echo "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
   fi
 
-  __git_activity_$action "$@" 2>/dev/null
+  case $1 in
+    postcheckout)
+      'builtin' 'shift'
+      __git_activity_postcheckout "$@"
+      ;;
+    record)
+      shift
+      __git_activity_record "$@"
+      ;;
+    show)
+      shift
+      __git_activity_show "$@"
+      ;;
+    *)
+      'builtin' 'printf' "Unsupported option %s\\n" "$1"
+      return 3
+      ;;
+  esac
 }
 
 main "$@"
