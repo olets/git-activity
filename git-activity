@@ -5,58 +5,52 @@
 # https://github.com/olets/git-activity
 # Copyright (©) 2017-present Henry Bley-Vroman
 
-LOG_FILE="$HOME"/git-activity.csv
+
+'builtin' 'export' GIT_ACTIVITY_LOG_PATH="${GIT_ACTIVITY_LOG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
+
+__git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
 __git_activity_log () {
-  __git_activity_prepend () {
-    tmp_prepended=$(mktemp "$TMPDIR"/log-git-activity_temp)
-    printf "$@"|cat - "$LOG_FILE" > "$tmp_prepended"
-    mv "$tmp_prepended" "$LOG_FILE"
-  }
+  local activity branch date existing_content_without_headers message repo sha
 
+  activity="$*"
+
+  if ! [ -n $activity ]; then
+    return
+  fi
   
-  DATE=$(date +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
-  REPO=$(basename "$(git rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
-  BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  MESSAGE=$(git log -1 --pretty=%s)
-  SHA=$(git rev-parse --short HEAD)
-  ACTIVITY="$*"
-  HEADING="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY\\n"
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  date=$(date +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
+  message=$(git log -1 --pretty=%s)
+  repo=$(basename "$(git rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
+  sha=$(git rev-parse --short HEAD)
 
-  if [ -e "$LOG_FILE" ]
-  then
-    tmp_trimmed=$(mktemp "$TMPDIR"/trimmed)
-    tail -n +2 "$LOG_FILE" > "$tmp_trimmed" && mv "$tmp_trimmed" "$LOG_FILE"
-  else
-    printf "$HEADING" > "$LOG_FILE"
-  fi
+  existing_content_without_headers=$(tail -n +2 "$GIT_ACTIVITY_LOG_PATH" | tail -r | tail -n +2 | tail -r)
 
-  __git_activity_prepend "%s\\t%s\\t%s\\t%s\\t%s\\t%s\\n" "$DATE" "$REPO" "$BRANCH" "$MESSAGE" "$SHA" "$ACTIVITY"
-  __git_activity_prepend "$HEADING"
-
-  if [ -n "$ACTIVITY" ]
-  then
-    printf "Git activity log: %s logged\\n" "$ACTIVITY"
-  fi
+  printf "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
+  printf "$date\\t$repo \\t$branch\\t$message\\t$sha\\t$activity\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  printf "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  printf "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  printf "Git activity log: %s logged\\n" "$activity"
 }
 
 __git_activity_see () {
-  DATE_FORMAT="+%Y-%m-%d"
+  local date_format
 
-  if [ "$1" = "all" ]
-  then
+  date_format="+%Y-%m-%d"
+
+  if [ "$1" = "all" ]; then
     log_date=2
-  elif [ -n "$*" ]
-  then
-    log_date=$(gdate "$DATE_FORMAT" -d "$*")
+  elif [ -n "$*" ]; then
+    log_date=$(gdate "$date_format" -d "$*")
   else
-    log_date=$(gdate "$DATE_FORMAT")
+    log_date=$(gdate "$date_format")
   fi
 
-  activity=$(grep ^"$log_date" "$LOG_FILE")
-  if [ -n "$activity" ]
-  then
-    grep -E "^($log_date|DATE)" "$LOG_FILE" | tail -r | column -ts '	' | less -NQS
+  activity=$(grep ^"$log_date" "$GIT_ACTIVITY_LOG_PATH")
+
+  if [ -n "$activity" ]; then
+    grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | less -NQS
   else
     printf "No git activity logged %s\\n" "$*"
   fi
@@ -64,11 +58,17 @@ __git_activity_see () {
 
 main() {
   local action
+
   action="$1"
+
   shift
-  echo $action
-  echo $@
-  __git_activity_$action "$@"
+
+  if ! [ -f "$GIT_ACTIVITY_LOG_PATH" ]; then
+    touch "$GIT_ACTIVITY_LOG_PATH"
+    echo "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
+  fi
+
+  __git_activity_$action "$@" 2>/dev/null
 }
 
 main "$@"
