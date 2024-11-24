@@ -40,27 +40,27 @@ __git_activity_record_post_checkout() {
 }
 
 __git_activity_record() {
-  local activity branch date existing_content_without_headers message repo sha
+  local commit_message branch date existing_content_without_headers log_message repo sha
 
-  activity="$*"
+  log_message="$*"
 
-  if [[ -z $activity ]]; then
+  if [[ -z $log_message ]]; then
     return
   fi
   
   branch=$('command' 'git' rev-parse --abbrev-ref HEAD)
   date=$('command' 'date' +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
-  message=$('command' 'git' log -1 --pretty=%s)
+  commit_message=$('command' 'git' log -1 --pretty=%s)
   repo=$('command' 'basename' "$('command' 'git' rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
   sha=$('command' 'git' rev-parse --short HEAD)
 
   existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_LOG_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
 
   'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "$date\\t$repo \\t$branch\\t$message\\t$sha\\t$activity\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "$date\\t$repo \\t$branch\\t$commit_message\\t$sha\\t$log_message\\n" >> "$GIT_ACTIVITY_LOG_PATH"
   'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
   'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "Git activity log: \`%s\` recorded\\n" "$activity"
+  'builtin' 'printf' "Git activity log: \`%s\` recorded\\n" "$log_message"
 }
 
 __git_activity_show() {
