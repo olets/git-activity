@@ -19,15 +19,13 @@ __git_activity_postcheckout() {
     return
   fi
 
-  # if the previous and new HEADs are the same
-  # 	and the current branch has only been checked out once
-  # 	and the current branch isn't tracking a remote branch
-  # then the hook was triggered by the creation of a new branch
-  # log the creation
-  if ( [ "$1" = "$2" ] &&
-    [ "$(git reflog --date=local | grep -o "$(git symbolic-ref --short HEAD)" | wc -l)" -eq 1 ] &&
-    [ -z "$(git config branch."$(git symbolic-ref --short HEAD)".merge)" ] )
-  then
+  if ( \
+    # if the previous and new HEADs are the same
+    [ "$1" = "$2" ] && \
+    # and the current branch has only been checked out once
+    [ "$(git reflog --date=local | grep -o "$(git symbolic-ref --short HEAD)" | wc -l)" -eq 1 ] && \
+    # and the current branch isn't tracking a remote branch
+    [ -z "$(git config branch."$(git symbolic-ref --short HEAD)".merge)" ] ); then
     __git_activity_log create
   fi
 }
