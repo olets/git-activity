@@ -9,7 +9,7 @@
 
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
-__git_activity_record_postcheckout() {
+__git_activity_record_post_checkout() {
   # N.B: means `git switch -c new && git checkout - && git switch -c new`
   #  only registers the first creation
 
@@ -90,14 +90,7 @@ __git_activity_version() {
 }
 
 main() {
-  local -a args
-  local -i post_checkout
-  local -i record
   local source_dir
-
-  args=( )
-  post_checkout=0
-  record=0
   
   if ! [[ -f "$GIT_ACTIVITY_LOG_PATH" ]]; then
     'command' 'touch' "$GIT_ACTIVITY_LOG_PATH"
@@ -113,13 +106,15 @@ main() {
         'command' 'man' git-activity 2>/dev/null || 'command' 'man' ${source_dir}/man/man1/git-activity.1
         return
         ;;
-      --post-checkout)
-        post_checkout=1
-        'builtin' 'shift'
-        ;;
       record)
-        record=1
         'builtin' 'shift'
+        __git_activity_record "$@"
+        return
+        ;;
+      record-post-checkout)
+        'builtin' 'shift'
+        __git_activity_record_post_checkout "$@"
+        return
         ;;
       show)
         'builtin' 'shift'
@@ -132,20 +127,11 @@ main() {
         return
         ;;
       *)
-        args+=( $1 )
-        'builtin' 'shift'
+        'builtin' 'printf' "Unsupported option %s\\n" "$1"
+        return 1
         ;;
     esac
   done
-
-  (( ! record )) && return
-
-  (( post_checkout )) && {
-    __git_activity_record_postcheckout "${args[@]}"
-    return
-  }
-
-  __git_activity_record "${args[@]}"
 }
 
 main "$@"
