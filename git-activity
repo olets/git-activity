@@ -50,7 +50,7 @@ __git_activity_see() {
   activity=$(grep ^"$log_date" "$GIT_ACTIVITY_LOG_PATH")
 
   if [ -n "$activity" ]; then
-    grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | less -NQS
+    grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
   else
     printf "No git activity logged %s\\n" "$*"
   fi
