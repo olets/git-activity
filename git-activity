@@ -60,7 +60,7 @@ __git_activity_record() {
   'builtin' 'printf' "$date\\t$repo \\t$branch\\t$commit_message\\t$sha\\t$log_message\\n" >> "$GIT_ACTIVITY_LOG_PATH"
   'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
   'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "Git activity log: \`%s\` recorded\\n" "$log_message"
+  'builtin' 'printf' "git-activity: \`%s\` recorded\\n" "$log_message"
 }
 
 __git_activity_show() {
