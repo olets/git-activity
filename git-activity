@@ -11,6 +11,14 @@
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
 __git_activity_postcheckout() {
+  # N.B: means `git switch -c new && git checkout - && git switch -c new`
+  #  only registers the first creation
+
+  local first_appearance_in_reflog no_tracking_branch
+
+  first_appearance_in_reflog=false
+  no_tracking_branch=false
+
   if [ "$#" -ne 3 ]; then
     return
   fi
@@ -19,13 +27,15 @@ __git_activity_postcheckout() {
     return
   fi
 
-  if ( \
-    # the branch doesn't appear in the reflog
-    # N.B: means `git switch -c new && git checkout - && git switch -c new`
-    #  only registers the first creation
-    [ "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ] && \
-    # and the current branch isn't tracking a remote branch
-    [ -z "$(git rev-parse @{u} 2>/dev/null)" ] ); then
+  if [ "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" -eq 1 ]; then
+    first_appearance_in_reflog=true
+  fi
+
+  if [ -z "$(git rev-parse @{u} 2>/dev/null)" ]; then
+    no_tracking_branch=true
+  fi
+
+  if $first_appearance_in_reflog && $no_tracking_branch; then
     __git_activity_record create
   fi
 }
