@@ -26,11 +26,11 @@ __git_activity_postcheckout() {
     return
   fi
 
-  if (( "$(git reflog | grep -o "$(git rev-parse --abbrev-ref @)" | wc -l)" == 1 )); then
+  if (( "$('command' 'git' reflog | grep -o "$('command' 'git' rev-parse --abbrev-ref @)" | 'command' 'wc' -l)" == 1 )); then
     first_appearance_in_reflog=true
   fi
 
-  if [[ -z "$(git rev-parse @{u} 2>/dev/null)" ]]; then
+  if [[ -z "$('command' 'git' rev-parse @{u} 2>/dev/null)" ]]; then
     no_tracking_branch=true
   fi
 
@@ -48,13 +48,13 @@ __git_activity_record() {
     return
   fi
   
-  branch=$(git rev-parse --abbrev-ref HEAD)
-  date=$(date +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
-  message=$(git log -1 --pretty=%s)
-  repo=$(basename "$(git rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
-  sha=$(git rev-parse --short HEAD)
+  branch=$('command' 'git' rev-parse --abbrev-ref HEAD)
+  date=$('command' 'date' +"%Y-%m-%d %H:%M:%S %z") # YYYY-MM-DD HH:MM:SS [UTC offset]
+  message=$('command' 'git' log -1 --pretty=%s)
+  repo=$('command' 'basename' "$('command' 'git' rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
+  sha=$('command' 'git' rev-parse --short HEAD)
 
-  existing_content_without_headers=$(tail -n +2 "$GIT_ACTIVITY_LOG_PATH" | tail -r | tail -n +2 | tail -r)
+  existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_LOG_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
 
   'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
   'builtin' 'printf' "$date\\t$repo \\t$branch\\t$message\\t$sha\\t$activity\\n" >> "$GIT_ACTIVITY_LOG_PATH"
@@ -79,20 +79,20 @@ __git_activity_show() {
   activity=$(grep ^"$log_date" "$GIT_ACTIVITY_LOG_PATH")
 
   if [[ -n "$activity" ]]; then
-    grep -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
+    'command' 'grep' -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
   else
     'builtin' 'printf' "No git activity recorded %s\\n" "$*"
   fi
 }
 
 __git_activity_version() {
-  printf "1.0.0-beta.1\\n"
+  'builtin' 'printf' "1.0.0-beta.1\\n"
 }
 
 main() {
   if ! [[ -f "$GIT_ACTIVITY_LOG_PATH" ]]; then
-    touch "$GIT_ACTIVITY_LOG_PATH"
-    echo "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
+    'command' 'touch' "$GIT_ACTIVITY_LOG_PATH"
+    'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
   fi
 
   case $1 in
@@ -101,16 +101,16 @@ main() {
       __git_activity_postcheckout "$@"
       ;;
     record)
-      shift
+      'builtin' 'shift'
       __git_activity_record "$@"
       ;;
     show)
-      shift
+      'builtin' 'shift'
       __git_activity_show "$@"
       ;;
     --version|\
     -v)
-      shift
+      'builtin' 'shift'
       __git_activity_version
       ;;
     *)
