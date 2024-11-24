@@ -10,6 +10,28 @@
 
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
+__git_activity_postcheckout() {
+  if [ "$#" -ne 3 ]; then
+    return
+  fi
+
+  if [ "$3" -eq 0 ]; then
+    return
+  fi
+
+  # if the previous and new HEADs are the same
+  # 	and the current branch has only been checked out once
+  # 	and the current branch isn't tracking a remote branch
+  # then the hook was triggered by the creation of a new branch
+  # log the creation
+  if ( [ "$1" = "$2" ] &&
+    [ "$(git reflog --date=local | grep -o "$(git symbolic-ref --short HEAD)" | wc -l)" -eq 1 ] &&
+    [ -z "$(git config branch."$(git symbolic-ref --short HEAD)".merge)" ] )
+  then
+    __git_activity_log create
+  fi
+}
+
 __git_activity_log() {
   local activity branch date existing_content_without_headers message repo sha
 
