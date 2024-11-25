@@ -90,12 +90,26 @@ __git_activity_record() {
   repo=$('command' 'basename' "$('command' 'git' rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
   sha=$('command' 'git' rev-parse --short HEAD)
 
-  existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_CSV_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
+  existing_content_without_headers=$(\
+    # Trim first line
+    'command' 'tail' -n +2 "$GIT_ACTIVITY_CSV_PATH" | \
+    # Reverse
+    'command' 'tail' -r | \
+    # Trim first line (which is the file's last line - it's been reversed)
+    'command' 'tail' -n +2 | \
+    # Re-reverse (back to source order)
+    'command' 'tail' -r
+  )
 
+  # Add the heading
   'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_CSV_PATH"
+  # Add the new entry
   'builtin' 'printf' "$date	$log_message	$repo	$branch	$commit_message	$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  # Add the previous entries
   'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  # Add the footer
   'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  
   'builtin' 'printf' "git-activity: \`%s\` recorded\\n" "$log_message"
 }
 
@@ -175,18 +189,27 @@ __git_activity_show() {
     '$1~date_pattern && $2~log_message_pattern && $3~repo_pattern && $4~branch_pattern && $5~commit_message_pattern && $6~sha_pattern' \
     > "$tmp_csv1"
     
+  # If the preceding command did not add any content to the file
   if ! [[ -s "$tmp_csv1" ]]; then
     'builtin' 'printf' "No git activity recorded %s\\n" "$*"
     return
   fi
 
+  # Append what will be the header
   'builtin' 'echo' "$__git_activity_heading" >> "$tmp_csv1"
+  # Reverse
   'command' 'cat' "$tmp_csv1" | 'command' 'tail' -r > "$tmp_csv2"
+  # Append the footer
   'builtin' 'echo' "$__git_activity_heading" >> "$tmp_csv2"
 
   'command' 'cat' "$tmp_csv2" | \
+    # Re-reverse (back to the order in the CSV)
+    'command' 'tail' -r | \
+    # Present in columns, delimited by tabs
     'command' 'column' -ts '	' | \
+    # Number lines starting with zero
     'command' 'nl' -v 0 | \
+    # Use the pager
     'command' 'less' -QS
 
   'command' 'rm' "$tmp_csv1"
