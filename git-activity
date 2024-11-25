@@ -127,13 +127,13 @@ __git_activity_version() {
 
 main() {
   local source_dir
+
+  source_dir=$('command' 'dirname' -- "${BASH_SOURCE[0]}")
   
   if ! [[ -f "$GIT_ACTIVITY_CSV_PATH" ]]; then
     'command' 'touch' "$GIT_ACTIVITY_CSV_PATH"
     'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_CSV_PATH"
   fi
-
-  source_dir=$(dirname -- "${BASH_SOURCE[0]}")
 
   case "$1" in
     --help|\
