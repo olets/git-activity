@@ -5,7 +5,7 @@
 # Copyright (©) 2017-present Henry Bley-Vroman
 
 
-'builtin' 'export' GIT_ACTIVITY_LOG_PATH="${GIT_ACTIVITY_LOG_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
+'builtin' 'export' GIT_ACTIVITY_CSV_PATH="${GIT_ACTIVITY_CSV_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
 
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
@@ -54,12 +54,12 @@ __git_activity_record() {
   repo=$('command' 'basename' "$('command' 'git' rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
   sha=$('command' 'git' rev-parse --short HEAD)
 
-  existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_LOG_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
+  existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_CSV_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
 
-  'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "$date\\t$repo \\t$branch\\t$commit_message\\t$sha\\t$log_message\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_LOG_PATH"
-  'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_LOG_PATH"
+  'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_CSV_PATH"
+  'builtin' 'printf' "$date\\t$log_message\\t$repo \\t$branch\\t$commit_message\\t$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_CSV_PATH"
   'builtin' 'printf' "git-activity: \`%s\` recorded\\n" "$log_message"
 }
 
@@ -76,10 +76,10 @@ __git_activity_show() {
     log_date=$(gdate "$date_format")
   fi
 
-  activity=$(grep ^"$log_date" "$GIT_ACTIVITY_LOG_PATH")
+  activity=$(grep ^"$log_date" "$GIT_ACTIVITY_CSV_PATH")
 
   if [[ -n "$activity" ]]; then
-    'command' 'grep' -E "^($log_date|DATE)" "$GIT_ACTIVITY_LOG_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
+    'command' 'grep' -E "^($log_date|DATE)" "$GIT_ACTIVITY_CSV_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
   else
     'builtin' 'printf' "No git activity recorded %s\\n" "$*"
   fi
@@ -92,9 +92,9 @@ __git_activity_version() {
 main() {
   local source_dir
   
-  if ! [[ -f "$GIT_ACTIVITY_LOG_PATH" ]]; then
-    'command' 'touch' "$GIT_ACTIVITY_LOG_PATH"
-    'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_LOG_PATH"
+  if ! [[ -f "$GIT_ACTIVITY_CSV_PATH" ]]; then
+    'command' 'touch' "$GIT_ACTIVITY_CSV_PATH"
+    'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_CSV_PATH"
   fi
 
   source_dir=$(dirname -- "${BASH_SOURCE[0]}")
