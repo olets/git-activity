@@ -221,12 +221,17 @@ __git_activity_version() {
 }
 
 main() {
-  local source_dir
+  local csv_dir source_dir
 
   source_dir=$('command' 'dirname' -- "${BASH_SOURCE[0]}")
   
   if ! [[ -f "$GIT_ACTIVITY_CSV_PATH" ]]; then
+    csv_dir=$('command' 'dirname' -- "$GIT_ACTIVITY_CSV_PATH")
+
+    [[ -d "$csv_dir" ]] || mkdir -p "$csv_dir"
+
     'command' 'touch' "$GIT_ACTIVITY_CSV_PATH"
+    
     'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_CSV_PATH"
   fi
 
