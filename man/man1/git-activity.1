@@ -9,6 +9,8 @@ git-random \- build random-content Git trees quickly
 
 \fBgit activity\fR \fBshow\fR [\fI\<date\>\fR]
 
+\fBgit activity\fR \fBinstall\fR
+
 \fBgit random\fR (\fBhelp\fR | \fB--help\fR)
 
 \fBgit random\fR (\fB--version\fR | \fB-v\fR)
@@ -41,6 +43,11 @@ you have used before recently enough for it to still be in the reflog.
 \fBgit activity\fR \fBshow\fR [\fI\<date\>\fR]
 
 Show the recorded activity for the given date (default: current date).
+
+.IP \(bu
+\fBgit activity\fR \fBinstall\fR
+
+Configures Git's global init.templatedir, and adds hooks to it.
 
 .IP \(bu
 \fBgit random\fR (\fBhelp\fR | \fB--help\fR)

@@ -9,6 +9,42 @@
 
 __git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
 
+__git_activity_install() {
+  local -A hook_cmds
+  local hooks_dir template_dir
+
+  hook_cmds=(
+    ["post-checkout"]='git activity record-post-checkout "$@"'
+    ["post-commit"]="git activity record commit"
+    ["post-rewrite"]="git activity record rewrite"
+    ["pre-push"]="git activity record push"
+  )
+
+  template_dir=$('command' 'git' config --global init.templatedir)
+  
+  [[ -z $template_dir ]] && {
+    template_dir="${${XDG_CONFIG_HOME:+${XDG_CONFIG_HOME%/}}:-$HOME/.config}/git-templates"
+    'command' 'git' config --global init.templatedir $template_dir
+    'builtin' 'printf' "Configured the global \`git init\` template directory to be %s" "$template_dir"
+  }
+
+  template_dir=$('builtin' 'echo' "echo $template_dir" | 'command' 'bash')
+  
+  hooks_dir=${template_dir}/hooks
+
+  if ! [[ -d "$hooks_dir" ]]; then
+    'command' 'mkdir' -p "$hooks_dir"
+  fi
+
+  for hook in "${!hook_cmds[@]}"; do
+    'command' 'touch' "${hooks_dir}/$hook"
+    'command' 'chmod' +x "${hooks_dir}/$hook"
+    'builtin' 'echo' "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+  done
+
+  'builtin' 'printf' "Added hooks in %s\\n" "$hooks_dir"
+}
+
 __git_activity_record_post_checkout() {
   # N.B: means `git switch -c new && git checkout - && git switch -c new`
   #  only registers the first creation
@@ -104,6 +140,10 @@ main() {
       --help|\
       help)
         'command' 'man' git-activity 2>/dev/null || 'command' 'man' ${source_dir}/man/man1/git-activity.1
+        return
+        ;;
+      install)
+        __git_activity_install
         return
         ;;
       record)
