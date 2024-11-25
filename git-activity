@@ -135,43 +135,41 @@ main() {
 
   source_dir=$(dirname -- "${BASH_SOURCE[0]}")
 
-  while (( $# )); do
-    case "$1" in
-      --help|\
-      help)
-        'command' 'man' git-activity 2>/dev/null || 'command' 'man' ${source_dir}/man/man1/git-activity.1
-        return
-        ;;
-      install)
-        __git_activity_install
-        return
-        ;;
-      record)
-        'builtin' 'shift'
-        __git_activity_record "$@"
-        return
-        ;;
-      record-post-checkout)
-        'builtin' 'shift'
-        __git_activity_record_post_checkout "$@"
-        return
-        ;;
-      show)
-        'builtin' 'shift'
-        __git_activity_show "$@"
-        return
-        ;;
-      --version|\
-      -v)
-        __git_activity_version
-        return
-        ;;
-      *)
-        'builtin' 'printf' "Unsupported option %s\\n" "$1"
-        return 1
-        ;;
-    esac
-  done
+  case "$1" in
+    --help|\
+    help)
+      'command' 'man' git-activity 2>/dev/null || 'command' 'man' ${source_dir}/man/man1/git-activity.1
+      return
+      ;;
+    install)
+      __git_activity_install
+      return
+      ;;
+    record)
+      'builtin' 'shift'
+      __git_activity_record "$@"
+      return
+      ;;
+    record-post-checkout)
+      'builtin' 'shift'
+      __git_activity_record_post_checkout "$@"
+      return
+      ;;
+    show)
+      'builtin' 'shift'
+      __git_activity_show "$@"
+      return
+      ;;
+    --version|\
+    -v)
+      __git_activity_version
+      return
+      ;;
+    *)
+      'builtin' 'printf' "Unsupported option %s\\n" "$1"
+      return 1
+      ;;
+  esac
 }
 
 main "$@"
