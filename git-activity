@@ -7,7 +7,7 @@
 
 'builtin' 'export' GIT_ACTIVITY_CSV_PATH="${GIT_ACTIVITY_CSV_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
 
-__git_activity_heading="DATE\\tREPO\\tBRANCH\\tCOMMIT MESSAGE\\tSHA\\tACTIVITY"
+__git_activity_heading="DATE	LOG MESSAGE	REPO	BRANCH	COMMIT MESSAGE	SHA"
 
 __git_activity_install() {
   local -A hook_cmds
@@ -93,7 +93,7 @@ __git_activity_record() {
   existing_content_without_headers=$('command' 'tail' -n +2 "$GIT_ACTIVITY_CSV_PATH" | 'command' 'tail' -r | 'command' 'tail' -n +2 | 'command' 'tail' -r)
 
   'builtin' 'printf' "$__git_activity_heading\\n" > "$GIT_ACTIVITY_CSV_PATH"
-  'builtin' 'printf' "$date\\t$log_message\\t$repo \\t$branch\\t$commit_message\\t$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  'builtin' 'printf' "$date	$log_message	$repo	$branch	$commit_message	$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
   'builtin' 'printf' "$existing_content_without_headers\\n" >> "$GIT_ACTIVITY_CSV_PATH"
   'builtin' 'printf' "$__git_activity_heading\\n" >> "$GIT_ACTIVITY_CSV_PATH"
   'builtin' 'printf' "git-activity: \`%s\` recorded\\n" "$log_message"
