@@ -3,13 +3,13 @@
 git-random \- build random-content Git trees quickly
 .SH SYNOPSIS
 
-\fBgit activity\fR \fBpost-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
+\fBgit activity post-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
 
-\fBgit activity\fR \fBrecord\fR \fI\<message\>\fR
+\fBgit activity record\fR \fI\<log message\>\fR
 
-\fBgit activity\fR \fBshow\fR [\fI\<date\>\fR]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date\fR \fI\<date\>\fR] [\fB--log-message\fR \fI\<log message\>\fR] [\fB--repo\fR \fI\<repo\>\fR] [\fB--branch \fI\<branch\>\fR] [\fB--commit-message\fR \fI\<commit message\>\fR] [\fB--sha\fR \fI\<commit SHA\>\fR])]
 
-\fBgit activity\fR \fBinstall\fR
+\fBgit activity install\fR
 
 \fBgit random\fR (\fBhelp\fR | \fB--help\fR)
 
@@ -24,9 +24,9 @@ with random content.
 The following commands are available:
 
 .IP \(bu
-\fBgit activity\fR \fBrecord\fR \fI\<message\>\fR
+\fBgit activity\fR \fBrecord\fR \fI\<log message\>\fR
 
-Record an activity message.
+Record an activity.
 
 .IP \(bu
 \fBgit activity\fR \fBpost-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
@@ -40,9 +40,9 @@ N.B: this has a false negative when creating a branch the name of which
 you have used before recently enough for it to still be in the reflog.
 
 .IP \(bu
-\fBgit activity\fR \fBshow\fR [\fI\<date\>\fR]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date\fR \fI\<date\>\fR] [\fB--log-message\fR \fI\<log message\>\fR] [\fB--repo\fR \fI\<repo\>\fR] [\fB--branch \fI\<branch\>\fR] [\fB--commit-message\fR \fI\<commit message\>\fR] [\fB--sha\fR \fI\<commit SHA\>\fR])]
 
-Show the recorded activity for the given date (default: current date).
+Show the recorded activity, optionally filtered by date, activity type (e.g. commit, branch creation, etc), repo name, branch name, commit message, and/or commit SHA.
 
 .IP \(bu
 \fBgit activity\fR \fBinstall\fR

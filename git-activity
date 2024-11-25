@@ -100,25 +100,97 @@ __git_activity_record() {
 }
 
 __git_activity_show() {
-  local date_format
+  local date_format log_date tmp_csv1 tmp_csv2 tmp_dir
+  local -A filters
+  local -i has_filters
 
   date_format="+%Y-%m-%d"
 
-  if [[ "$1" == "all" ]]; then
-    log_date=2
-  elif [[ -n "$*" ]]; then
-    log_date=$(gdate "$date_format" -d "$*")
-  else
-    log_date=$(gdate "$date_format")
+  has_filters=$#
+
+  filters=(
+    ["date"]=""
+    ["log_message"]=""
+    ["repo"]=""
+    ["branch"]=""
+    ["commit_message"]=""
+    ["sha"]=""
+  )
+
+  while (( $# )); do
+    case "$1" in
+      --date)
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$2")
+        'builtin' 'shift' 2
+        ;;
+      --log-message)
+        filters["log_message"]="$2"
+        'builtin' 'shift' 2
+        ;;
+      --repo)
+        filters["repo"]="$2"
+        'builtin' 'shift' 2
+        ;;
+      --branch)
+        filters["branch"]="$2"
+        'builtin' 'shift' 2
+        ;;
+      --commit-message)
+        filters["commit_message"]="$2"
+        'builtin' 'shift' 2
+        ;;
+      --sha)
+        filters["sha"]="$2"
+        'builtin' 'shift' 2
+        ;;
+      *)
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$1")
+        'builtin' 'shift'
+        ;;
+    esac
+  done
+
+  if (( ! has_filters )); then
+    'command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | \
+      'command' 'column' -ts '	' | \
+      'command' 'nl' -v 0 | \
+      'command' 'less' -QS
+    return
   fi
 
-  activity=$(grep ^"$log_date" "$GIT_ACTIVITY_CSV_PATH")
+  tmp_dir="${TMPDIR:-/tmp}"
+  tmp_dir="${tmp_dir%/}/git-activity/"
+  [[ -d "$tmp_dir" ]] || mkdir -p "$tmp_dir"
 
-  if [[ -n "$activity" ]]; then
-    'command' 'grep' -E "^($log_date|DATE)" "$GIT_ACTIVITY_CSV_PATH" | tail -r | column -ts '	' | nl -v 0 | less -QS
-  else
+  tmp_csv1=$(mktemp ${tmp_dir}1.csv.XXXXXX)
+  tmp_csv2=$(mktemp ${tmp_dir}2.csv.XXXXXX)
+
+  'command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | 'command' 'awk' -F'\t' \
+    -v date_pattern="^${filters[date]}" \
+    -v log_message_pattern="${filters[log_message]}" \
+    -v repo_pattern="${filters[repo]}" \
+    -v branch_pattern="${filters[branch]}" \
+    -v commit_message_pattern="${filters[commit_message]}" \
+    -v sha_pattern="${filters[sha]}" \
+    '$1~date_pattern && $2~log_message_pattern && $3~repo_pattern && $4~branch_pattern && $5~commit_message_pattern && $6~sha_pattern' \
+    > "$tmp_csv1"
+    
+  if ! [[ -s "$tmp_csv1" ]]; then
     'builtin' 'printf' "No git activity recorded %s\\n" "$*"
+    return
   fi
+
+  'builtin' 'echo' "$__git_activity_heading" >> "$tmp_csv1"
+  'command' 'cat' "$tmp_csv1" | 'command' 'tail' -r > "$tmp_csv2"
+  'builtin' 'echo' "$__git_activity_heading" >> "$tmp_csv2"
+
+  'command' 'cat' "$tmp_csv2" | \
+    'command' 'column' -ts '	' | \
+    'command' 'nl' -v 0 | \
+    'command' 'less' -QS
+
+  'command' 'rm' "$tmp_csv1"
+  'command' 'rm' "$tmp_csv2"
 }
 
 __git_activity_version() {
