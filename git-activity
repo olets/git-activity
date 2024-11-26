@@ -122,28 +122,28 @@ __git_activity_show() {
         filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
         'builtin' 'shift'
         ;;
-      --log-message=*)
-        value="${1:14}"
+      --log-message-pattern=*)
+        value="${1:22}"
         filters["log_message"]="$value"
         'builtin' 'shift'
         ;;
-      --repo=*)
-        value="${1:7}"
+      --repo-pattern=*)
+        value="${1:15}"
         filters["repo"]="$value"
         'builtin' 'shift'
         ;;
-      --branch=*)
-        value="${1:9}"
+      --branch-pattern=*)
+        value="${1:17}"
         filters["branch"]="$value"
         'builtin' 'shift'
         ;;
-      --commit-message=*)
-        value="${1:17}"
+      --commit-message-pattern=*)
+        value="${1:25}"
         filters["commit_message"]="$value"
         'builtin' 'shift'
         ;;
-      --sha=*)
-        value="${1:6}"
+      --sha-pattern=*)
+        value="${1:14}"
         filters["sha"]="$value"
         'builtin' 'shift'
         ;;

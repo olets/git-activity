@@ -1,6 +1,6 @@
 # git-activity ![GitHub release (latest by date)](https://img.shields.io/github/v/release/olets/git-activity) ![GitHub commits since latest release](https://img.shields.io/github/commits-since/olets/git-activity/latest)
 
-**git-activity**: Record and show your Git activity across multiple (or all) repos, optionally filtered by date, activity type (e.g. commit, branch creation, etc), repo name, branch name, commit message, and/or commit SHA.
+**git-activity**: Record and show your Git activity across multiple (or all) repos, optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.[^1]
 
 It sort of like a global `git log` where you control which repos are watched and what types of activity are recorded. 
 
@@ -25,7 +25,7 @@ Useful for
 - Finding that time you solved a problem similar to the one you're working on now
 
     ```shell
-    git activity --commit-message='(card.*pay)|(pay.*card)'
+    git activity --commit-message-pattern='(card.*pay)|(pay.*card)'
     ```
 
 ## Set up automatic recording
@@ -91,7 +91,7 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
     git activity record <log message>
     ```
 
-    Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS UTC-offset`), log message (typically an identifier of the type of activity, e.g. "commit", "rewrite"), repo name, the checked out branch's name, the checked out commit's message, and the checked out commit's SHA.
+    Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS UTC-offset`), log message (typically an identifier of the type of activity, e.g. "commit", "rewrite") regex pattern, repo name regex pattern, the checked out branch's name regex pattern, the checked out commit's message regex pattern, and the checked out commit's SHA regex pattern.[^1]
 
     - If you have [automatic recording set up](#set-up-automatic-recording), go about your daily work, creating branches, committing, rebasing, etc., and entries will be added to the log file for you.
 
@@ -108,7 +108,7 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
 1. `git activity show`: Review Git activity.
 
     ```shell
-    git activity show [<date> | ([--date=<date>] [--log-message=<log message>] [--repo=<repo>] [--branch=<branch>] [--commit-message=<commit message>] [--sha=<commit SHA>])]
+    git activity show [<date> | ([--date=<date>] [--log-message-pattern=<log message pattern>] [--repo-pattern=<repo pattern>] [--branch-pattern=<branch pattern>] [--commit-message-pattern=<commit message pattern>] [--sha-pattern=<7-character commit SHA pattern>])]
     ```
 
     Use a terminal pager to display the log file's data, optionally filtered.
@@ -135,14 +135,14 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
         git activity show "last monday" # or `git activity show --date "last monday"`
         ```
 
-    - Filter by **any combination** of date, log message substring, repo substring, branch substring, commit message substring, and commit SHA substring.
+    - Filter by **any combination** of date, log message regex pattern, repo regex pattern, branch regex pattern, commit message regex pattern, and 7-character commit SHA regex pattern.[^1]
 
         ```shell
         # what progress did I make on assignments yesterday?
-        git activity show yesterday --commit-message='feat\\('
+        git activity show yesterday --commit-message-pattern='feat\\('
 
         # what did I do on this project last week?
-        git activity show "last week monday" --repo=my-cool-project
+        git activity show "last week monday" --repo-pattern=my-cool-project
         ```
 
         > [!NOTE]
@@ -156,11 +156,11 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
         org-2--front
         org-2--back
         # activity recorded in all `org-1` repos
-        % git activity show --repo=org-1
+        % git activity show --repo-pattern=org-1
         # activity recorded in `org-1--front`, `org-2--front`, and `afronted`
-        % git activity show --repo=front
+        % git activity show --repo-pattern=front
         # activity recorded in `org-1--front` and `org-2--front`
-        % git activity show --repo='--front'
+        % git activity show --repo-pattern='--front'
         ```
 
 ## Options
@@ -214,3 +214,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 ## Related
 
 I've created other command line tools, including other Git tools. Check them out at <https://olets.dev/software/>.
+
+## Footnotes
+
+[^1]: Specifically, `awk` regex patterns.
