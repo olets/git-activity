@@ -108,7 +108,7 @@ __git_activity_show() {
 
   if ! $'command' -v awk &>/dev/null; then
     # DUPE
-    'builtin' 'printf' "Requires \`awk\`. Installation method varies by OS.\\nAborting.\\n"
+    'builtin' 'printf' "Error: Requires \`awk\`. Installation method varies by OS.\\nAborting.\\n"
     return
   fi
 
@@ -132,7 +132,7 @@ __git_activity_show() {
       --date=*)
         if ! $'command' -v gdate &>/dev/null; then
           # DUPE
-          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
+          'builtin' 'printf' "Error: Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
           return
         fi
 
@@ -142,7 +142,7 @@ __git_activity_show() {
 
         # DUPE
         if (( "$?" )); then
-          'builtin' 'printf' "invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
+          'builtin' 'printf' "Error: invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
           return
         fi
 
@@ -180,7 +180,7 @@ __git_activity_show() {
       *)
         if ! $'command' -v gdate &>/dev/null; then
           # DUPE
-          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
+          'builtin' 'printf' "Error: Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
           return
         fi
         
@@ -190,7 +190,7 @@ __git_activity_show() {
 
         # DUPE
         if (( "$?" )); then
-          'builtin' 'printf' "invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
+          'builtin' 'printf' "Error: invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
           return
         fi
 
@@ -226,7 +226,7 @@ __git_activity_show() {
     )
     
   if [[ -z "$results" ]]; then
-    'builtin' 'printf' "No matching Git activity recorded %s\\n" "$*"
+    'builtin' 'printf' "Error: No matching Git activity recorded %s\\n" "$*"
     return
   fi
 
@@ -304,7 +304,7 @@ main() {
       return
       ;;
     *)
-      'builtin' 'printf' "Unsupported option %s\\n" "$1"
+      'builtin' 'printf' "Error: Unsupported option %s\\n" "$1"
       return 1
       ;;
   esac
