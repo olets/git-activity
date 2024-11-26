@@ -1,11 +1,11 @@
-.TH "GIT-RANDOM" 1 "September 23 2024" "git-random 2.0.1" "User Commands"
+.TH "GIT-ACTIVITY" 1 "September 25 2024" "git-activity 1.0.0" "User Commands"
 .SH NAME
-git-random \- build random-content Git trees quickly
+git-activity \- Record and show your Git activity across multiple (or all) repos, optionally filtered
 .SH SYNOPSIS
 
-\fBgit activity post-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
-
 \fBgit activity record\fR \fI\<log message\>\fR
+
+\fBgit activity post-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
 
 \fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<log message\>\fR] [\fB--repo-pattern=\fR\fI\<repo\>\fR] [\fB--branch=\fI\<branch\>\fR] [\fB--commit-message-pattern=\fR\fI\<commit message\>\fR] [\fB--sha-pattern=\fR\fI\<commit SHA\>\fR])]
 
@@ -16,9 +16,11 @@ git-random \- build random-content Git trees quickly
 \fBgit random\fR (\fB--version\fR | \fB-v\fR)
 
 .SH DESCRIPTION
-\fBgit-random\fR is a tool for helping with Git practice and experimentation.
-Build commit history quickly by creating and committing randomly-named files
-with random content.
+\fBgit-activity\fR Record and show your Git activity across multiple (or all)
+repos, optionally filtered by date, activity type (e.g. commit, branch
+creation, etc) regex pattern, repo name regex pattern, branch name regex
+pattern, commit message regex pattern, and/or commit SHA (first seven
+characters) regex pattern. (Regex patterns are specifically awk regex patterns)
 
 .SH COMMANDS
 The following commands are available:
