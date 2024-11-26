@@ -186,7 +186,7 @@ Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS
 `git activity show`: Review Git activity.
 
 ```shell
-git activity show [<date> | ([--date=<date>] [--log-message-pattern=<log message pattern>] [--repo-pattern=<repo pattern>] [--branch-pattern=<branch pattern>] [--commit-message-pattern=<commit message pattern>] [--sha-pattern=<7-character commit SHA pattern>])]
+git activity show [<date> | ([--date=<date>] [--log-message-pattern=<pattern>] [--repo-pattern=<pattern>] [--branch-pattern=<pattern>] [--commit-message-pattern=<pattern>] [--sha-pattern=<pattern>])]
 ```
 
 Use a terminal pager to display the log file's data, optionally filtered.

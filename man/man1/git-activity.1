@@ -7,7 +7,7 @@ git-activity \- Record and show your Git activity across multiple (or all) repos
 
 \fBgit activity post-checkout-record\fR \fI\<Git post-checkout hook parameters\>\fR
 
-\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<log message\>\fR] [\fB--repo-pattern=\fR\fI\<repo\>\fR] [\fB--branch=\fI\<branch\>\fR] [\fB--commit-message-pattern=\fR\fI\<commit message\>\fR] [\fB--sha-pattern=\fR\fI\<commit SHA\>\fR])]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<pattern\>\fR] [\fB--repo-pattern=\fR\fI\<pattern\>\fR] [\fB--branch=\fI\<pattern\>\fR] [\fB--commit-message-pattern=\fR\fI\<pattern\>\fR] [\fB--sha-pattern=\fR\fI\<pattern\>\fR])]
 
 \fBgit activity install\fR
 
@@ -42,7 +42,7 @@ N.B: this has a false negative when creating a branch the name of which
 you have used before recently enough for it to still be in the reflog.
 
 .IP \(bu
-\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<log message\>\fR] [\fB--repo-pattern=\fR\fI\<repo\>\fR] [\fB--branch=\fI\<branch\>\fR] [\fB--commit-message-pattern=\fR\fI\<commit message\>\fR] [\fB--sha-pattern=\fR\fI\<commit SHA\>\fR])]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<pattern\>\fR] [\fB--repo-pattern=\fR\fI\<pattern\>\fR] [\fB--branch=\fI\<pattern\>\fR] [\fB--commit-message-pattern=\fR\fI\<pattern\>\fR] [\fB--sha-pattern=\fR\fI\<pattern\>\fR])]
 
 Show the recorded activity, optionally filtered by date, activity type (e.g. commit, branch creation, etc), repo name, branch name, commit message, and/or commit SHA.
 
