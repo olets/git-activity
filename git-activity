@@ -38,11 +38,20 @@ __git_activity_install() {
 
   for hook in "${!hook_cmds[@]}"; do
     if [[ -f "${hooks_dir}/$hook" ]]; then
+      # DUPE
+      'builtin' 'printf' "\\n# Added by \`git activity install\`\\n# https://github.com/olets/git-activity\\n" >> "${hooks_dir}/$hook"
+
       'builtin' 'printf' "%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
     else
       'command' 'touch' "${hooks_dir}/$hook"
       'command' 'chmod' +x "${hooks_dir}/$hook"
-      'builtin' 'printf' "#!/usr/bin/env bash\\n\\n%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+
+      'builtin' 'printf' "#!/usr/bin/env bash\\n" >> "${hooks_dir}/$hook"
+
+      # DUPE
+      'builtin' 'printf' "\\n# Added by \`git activity install\`\\n# https://github.com/olets/git-activity\\n" >> "${hooks_dir}/$hook"
+
+      'builtin' 'printf' "%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
     fi
   done
 
