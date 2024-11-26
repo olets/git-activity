@@ -9,6 +9,50 @@
 
 __git_activity_heading="DATE	LOG MESSAGE	REPO	BRANCH	COMMIT MESSAGE	SHA"
 
+__git_activity_check_dependencies() {
+  local -a dependencies
+  local dependency
+  local -i ret
+  
+  dependencies=(
+    awk
+    bash
+    column
+    git
+    less
+    man
+
+    # coreutils dependencies
+    basename
+    cat
+    chmod
+    dirname
+    mkdir
+    nl
+    rm
+    touch
+    wc
+    
+    # additional dependencies with special requirements: GNU date
+  )
+
+  ret=0
+
+  for dependency in "${dependencies[@]}"; do
+    if ! 'command' -v "$dependency" &>/dev/null; then
+      ret=1
+      'builtin' 'printf' "Missing dependency \`%s\`. See https://command-not-found.com/%s for installation instructions.\\n" "$dependency" "$dependency"
+    fi
+  done
+
+  if ! 'command' 'date' '+%Y-%m-%d' -d today &>/dev/null && ! 'command' 'gdate' '+%Y-%m-%d' -d today &>/dev/null; then
+    ret=1
+    'builtin' 'printf' "Missing dependency GNU \`date\`. See https://command-not-found.com/date for installation instructions.\\n"
+  fi
+
+  return "$ret"
+}
+
 __git_activity_install() {
   local -A hook_cmds
   local hooks_dir template_dir
@@ -119,12 +163,6 @@ __git_activity_show() {
   local -A filters
   local -i has_filters
 
-  if ! $'command' -v awk &>/dev/null; then
-    # DUPE
-    'builtin' 'printf' "Error: Requires \`awk\`. Installation method varies by OS.\\nAborting.\\n"
-    return
-  fi
-
   date_format="+%Y-%m-%d"
 
   has_filters=$#
@@ -143,12 +181,6 @@ __git_activity_show() {
 
     case "$1" in
       --date=*)
-        if ! $'command' -v gdate &>/dev/null; then
-          # DUPE
-          'builtin' 'printf' "Error: Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
-          return
-        fi
-
         value="${1:7}"
 
         filters["date"]=$('command' 'gdate' "$date_format" -d "$value" 2>/dev/null)
@@ -191,12 +223,6 @@ __git_activity_show() {
         return 3
         ;;
       *)
-        if ! $'command' -v gdate &>/dev/null; then
-          # DUPE
-          'builtin' 'printf' "Error: Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
-          return
-        fi
-        
         value="$1"
 
         filters["date"]=$('command' 'gdate' "$date_format" -d "$value" 2>/dev/null)
@@ -269,6 +295,8 @@ main() {
   local csv_dir source_dir
 
   source_dir=$('command' 'dirname' -- "${BASH_SOURCE[0]}")
+
+  ! __git_activity_check_dependencies && return
   
   if ! [[ -f "$GIT_ACTIVITY_CSV_PATH" ]]; then
     csv_dir=$('command' 'dirname' -- "$GIT_ACTIVITY_CSV_PATH")
@@ -284,7 +312,6 @@ main() {
     'builtin' 'printf' "Error: Specify a subcommand.\\n"
     return 2
   fi
-
 
   case "$1" in
     --help|\
