@@ -130,7 +130,7 @@ __git_activity_show() {
     case "$1" in
       --date=*)
         if ! $'command' -v gdate &>/dev/null; then
-          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting."
+          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
           return
         fi
 
@@ -176,7 +176,7 @@ __git_activity_show() {
         ;;
       *)
         if ! $'command' -v gdate &>/dev/null; then
-          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting."
+          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting.\\n"
           return
         fi
         
