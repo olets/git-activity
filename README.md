@@ -96,6 +96,9 @@ Users of shells **other than zsh** may be able to install git-random as a plugin
 > [!TIP]
 > **Recommended**
 
+> [!WARNING]  
+> Does not check to see if you've already installed this. If you notice duplicative entries in your git-activity log, check your global `init.templatedir` hooks, and the `.git` hooks in any repos you've run `git init` in
+
 To configure Git to record all `git commit`s, `git commit --amend`s, `git rebase`s, `git push`es, and most `git checkout -b`/`git switch -c`, run
 
 ```shell
