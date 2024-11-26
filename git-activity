@@ -118,6 +118,11 @@ __git_activity_show() {
 
     case "$1" in
       --date=*)
+        if ! $'command' -v gdate &>/dev/null; then
+          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting."
+          return
+        fi
+
         value="${1:7}"
         filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
         'builtin' 'shift'
@@ -148,6 +153,11 @@ __git_activity_show() {
         'builtin' 'shift'
         ;;
       *)
+        if ! $'command' -v gdate &>/dev/null; then
+          'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting."
+          return
+        fi
+        
         value="$1"
         filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
         'builtin' 'shift'
