@@ -124,7 +124,14 @@ __git_activity_show() {
         fi
 
         value="${1:7}"
-        filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
+
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$value" 2>/dev/null)
+
+        if (( "$?" )); then
+          'builtin' 'printf' "invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
+          return
+        fi
+
         'builtin' 'shift'
         ;;
       --log-message-pattern=*)
@@ -163,7 +170,14 @@ __git_activity_show() {
         fi
         
         value="$1"
-        filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
+
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$value" 2>/dev/null)
+
+        if (( "$?" )); then
+          'builtin' 'printf' "invalid date: '%s'\\nMore more info, see \`gdate\`.\\n" "$value"
+          return
+        fi
+
         'builtin' 'shift'
         ;;
     esac
