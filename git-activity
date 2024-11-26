@@ -206,7 +206,7 @@ __git_activity_record() {
 }
 
 __git_activity_show() {
-  local date_format log_date tmp_csv tmp_dir value
+  local date_format log_date results tmp_csv tmp_dir value
   local -A filters
   local -i has_filters
 
@@ -327,6 +327,7 @@ __git_activity_show() {
     # Reverse chronological order
     'command' 'tail' -r
   )
+  results=$('command' 'tac' "$GIT_ACTIVITY_CSV_PATH")
 
   (( has_filters )) && results=$(echo "$results" | 'command' 'awk' -F'\t' \
     -v date_pattern="^${filters[date]}" \
