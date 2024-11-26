@@ -7,8 +7,6 @@
 
 'builtin' 'export' GIT_ACTIVITY_CSV_PATH="${GIT_ACTIVITY_CSV_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
 
-__git_activity_heading="DATE	LOG MESSAGE	REPO	BRANCH	COMMIT MESSAGE	SHA"
-
 __git_activity_check_dependencies() {
   local -a dependencies
   local dependency
@@ -30,6 +28,7 @@ __git_activity_check_dependencies() {
     mkdir
     nl
     rm
+    tac
     touch
     wc
     
@@ -206,14 +205,13 @@ __git_activity_record() {
 }
 
 __git_activity_show() {
-  local date_format log_date results tmp_csv tmp_dir value
+  local date_format log_date results results_key tmp_csv tmp_dir value
   local -A filters
   local -i has_filters
 
   date_format="+%Y-%m-%d"
-
+  results_key="DATE	LOG MESSAGE	REPO	BRANCH	COMMIT MESSAGE	SHA"
   has_filters=$#
-
   filters=(
     ["date"]=""
     ["log_message"]=""
@@ -319,14 +317,6 @@ __git_activity_show() {
 
   tmp_csv=$(mktemp "${tmp_dir}".csv.XXXXXX)
 
-  local results
-
-  results=$('command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | \
-    # Trim CSV header
-    'command' 'tail' -n +2 |\
-    # Reverse chronological order
-    'command' 'tail' -r
-  )
   results=$('command' 'tac' "$GIT_ACTIVITY_CSV_PATH")
 
   (( has_filters )) && results=$(echo "$results" | 'command' 'awk' -F'\t' \
@@ -345,11 +335,11 @@ __git_activity_show() {
   fi
 
   # Append the header
-  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv"
+  'builtin' 'printf' "%s\\n" "$results_key" >> "$tmp_csv"
   # Append the results
   'builtin' 'printf' "%s\\n" "$results" >> "$tmp_csv"
   # Append the footer
-  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv"
+  'builtin' 'printf' "%s\\n" "$results_key" >> "$tmp_csv"
 
   'command' 'cat' "$tmp_csv" | \
     # Present in columns, delimited by tabs
@@ -384,8 +374,6 @@ main() {
     [[ -d "$csv_dir" ]] || mkdir -p "$csv_dir"
 
     'command' 'touch' "$GIT_ACTIVITY_CSV_PATH"
-
-    'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_CSV_PATH"
   fi
 
   if (( ! $# )); then
