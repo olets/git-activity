@@ -262,7 +262,7 @@ __git_activity_show() {
 }
 
 __git_activity_version() {
-  'builtin' 'printf' "1.0.1\\n"
+  'builtin' 'printf' "1.0.2\\n"
 }
 
 main() {
