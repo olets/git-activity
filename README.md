@@ -213,7 +213,7 @@ Use a terminal pager to display the log file's data, optionally filtered.
     git activity show "last monday" # or `git activity show --date "last monday"`
     ```
 
-- Filter by **any combination** of date, log message regex pattern, repo regex pattern, branch regex pattern, commit message regex pattern, and 7-character commit SHA regex pattern.[^1]
+- Filter by **any combination** of date, log message regex pattern, repo regex pattern, branch regex pattern, commit message regex pattern, and commit SHA (first seven characters) regex pattern.[^1]
 
     ```shell
     # what progress did I make on assignments yesterday?
