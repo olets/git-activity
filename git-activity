@@ -254,7 +254,7 @@ __git_activity_show() {
         # exits
         ;;
       -*)
-        'builtin' 'printf' "Unsupported option %s\n" "$1"
+        'builtin' 'printf' "Unsupported option \`%s\`\\n" "$1"
         return 3
         ;;
       *)
@@ -418,7 +418,7 @@ main() {
       # exits
       ;;
     *)
-      'builtin' 'printf' "Error: Unsupported option %s\\n" "$1"
+      'builtin' 'printf' "Error: Unsupported option \`%s\`\\n" "$1"
       return 1
       ;;
   esac
