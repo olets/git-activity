@@ -37,9 +37,13 @@ __git_activity_install() {
   fi
 
   for hook in "${!hook_cmds[@]}"; do
-    'command' 'touch' "${hooks_dir}/$hook"
-    'command' 'chmod' +x "${hooks_dir}/$hook"
-    'builtin' 'echo' "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+    if [[ -f "${hooks_dir}/$hook" ]]; then
+      'builtin' 'printf' "%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+    else
+      'command' 'touch' "${hooks_dir}/$hook"
+      'command' 'chmod' +x "${hooks_dir}/$hook"
+      'builtin' 'printf' "#!/usr/bin/env bash\\n\\n%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+    fi
   done
 
   'builtin' 'printf' "Added hooks in %s\\n" "$hooks_dir"
