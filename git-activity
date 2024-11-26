@@ -96,7 +96,7 @@ __git_activity_record() {
 }
 
 __git_activity_show() {
-  local date_format log_date tmp_csv1 tmp_csv2 tmp_dir
+  local date_format log_date tmp_csv tmp_dir
   local -A filters
   local -i has_filters
 
@@ -158,8 +158,7 @@ __git_activity_show() {
   tmp_dir="${tmp_dir%/}/git-activity/"
   [[ -d "$tmp_dir" ]] || mkdir -p "$tmp_dir"
 
-  tmp_csv1=$(mktemp ${tmp_dir}1.csv.XXXXXX)
-  tmp_csv2=$(mktemp ${tmp_dir}2.csv.XXXXXX)
+  tmp_csv=$(mktemp ${tmp_dir}1.csv.XXXXXX)
 
   local results
 
@@ -179,13 +178,13 @@ __git_activity_show() {
   fi
 
   # Append the header
-  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv1"
+  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv"
   # Append the results
-  'builtin' 'printf' "%s\\n" "$results" >> "$tmp_csv1"
+  'builtin' 'printf' "%s\\n" "$results" >> "$tmp_csv"
   # Append the footer
-  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv1"
+  'builtin' 'printf' "%s\\n" "$__git_activity_heading" >> "$tmp_csv"
 
-  'command' 'cat' "$tmp_csv1" | \
+  'command' 'cat' "$tmp_csv" | \
     # Present in columns, delimited by tabs
     'command' 'column' -ts '	' | \
     # Number lines starting with zero
@@ -193,8 +192,7 @@ __git_activity_show() {
     # Use the pager
     'command' 'less' -QS
 
-  'command' 'rm' "$tmp_csv1"
-  'command' 'rm' "$tmp_csv2"
+  'command' 'rm' "$tmp_csv"
 }
 
 __git_activity_version() {
