@@ -308,6 +308,8 @@ __git_activity_show() {
   results=$('command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | \
     # Trim CSV header
     'command' 'tail' -n +2 |\
+    # Reverse chronological order
+    'command' 'tail' -r
   )
 
   (( has_filters )) && results=$(echo "$results" | 'command' 'awk' -F'\t' \
