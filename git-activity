@@ -5,7 +5,7 @@
 # Copyright (©) 2017-present Henry Bley-Vroman
 
 
-'builtin' 'export' GIT_ACTIVITY_CSV_PATH="${GIT_ACTIVITY_CSV_PATH:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
+'builtin' 'export' GIT_ACTIVITY_LOG_FILE="${GIT_ACTIVITY_LOG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
 
 __git_activity_check_dependencies() {
   local -a dependencies
@@ -199,7 +199,7 @@ __git_activity_record() {
   repo=$('command' 'basename' "$('command' 'git' rev-parse --show-toplevel)") # note this uses the *local* name. to use the remote name, use $(basename -s .git "$(git config --get remote.origin.url)")
   sha=$('command' 'git' rev-parse --short HEAD)
 
-  'builtin' 'printf' "$date	$log_message	$repo	$branch	$commit_message	$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
+  'builtin' 'printf' "$date	$log_message	$repo	$branch	$commit_message	$sha\\n" >> "$GIT_ACTIVITY_LOG_FILE"
 
   'builtin' 'printf' "git-activity: '%s' recorded\\n" "$log_message"
 }
@@ -317,7 +317,7 @@ __git_activity_show() {
 
   tmp_csv=$(mktemp "${tmp_dir}".csv.XXXXXX)
 
-  results=$('command' 'tac' "$GIT_ACTIVITY_CSV_PATH")
+  results=$('command' 'tac' "$GIT_ACTIVITY_LOG_FILE")
 
   (( has_filters )) && results=$(echo "$results" | 'command' 'awk' -F'\t' \
     -v date_pattern="^${filters[date]}" \
@@ -365,12 +365,12 @@ main() {
 
   ! __git_activity_check_dependencies && return
   
-  if ! [[ -f "$GIT_ACTIVITY_CSV_PATH" ]]; then
-    csv_dir=$('command' 'dirname' -- "$GIT_ACTIVITY_CSV_PATH")
+  if ! [[ -f "$GIT_ACTIVITY_LOG_FILE" ]]; then
+    csv_dir=$('command' 'dirname' -- "$GIT_ACTIVITY_LOG_FILE")
 
     [[ -d "$csv_dir" ]] || mkdir -p "$csv_dir"
 
-    'command' 'touch' "$GIT_ACTIVITY_CSV_PATH"
+    'command' 'touch' "$GIT_ACTIVITY_LOG_FILE"
   fi
 
   if (( ! $# )); then
