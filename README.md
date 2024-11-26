@@ -112,7 +112,7 @@ Users of shells **other than zsh** may be able to install git-random as a plugin
 > [!WARNING]  
 > Does not check to see if you've already installed this. If you notice duplicative entries in your git-activity log, check your global `init.templatedir` hooks, and the `.git` hooks in any repos you've run `git init` in
 
-To configure Git to record all `git commit`s, `git commit --amend`s, `git rebase`s, `git push`es, and most `git checkout -b`/`git switch -c`, run
+To configure Git to record all `git commit`s, `git commit --amend`s, `git merge`s, `git push`es, `git rebase`s, and most `git checkout -b`/`git switch -c`, run
 
 ```shell
 git activity install
@@ -124,7 +124,7 @@ That will
     - If `XDG_CONFIG_HOME` is defined and the global Git `init.templatedir` is not defined, Git's global `init.templatedir` will be configured as `$XDG_CONFIG_HOME/.config/git-templates`
     - Otherwise, if `XDG_CONFIG_HOME` is not defined and the global Git `init.templatedir` is not defined, Git's global `init.templatedir` will be configured as `$HOME/.config/git-templates`
 1. Add a `hooks` directory to Git's global `init.templatedir` if it does not exist already.
-1. Create or add to the `hooks` directory's `post-checkout`, `post-commit`, `post-rewrite`, and `pre-push` files.
+1. Create or add to the `hooks` directory's `post-checkout`, `post-commit`, `git merge`, `post-rewrite`, and `pre-push` files.
 
 ### Manual
 
@@ -153,7 +153,7 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
     git activity record <replace me>
     ```
 
-    for `post-commit`, `post-rewrite`, and/or `pre-push` hooks, where `<replace me>` is replaced with `commit`, `rewrite`, and `push`, respectively.
+    for `post-commit`, `git merge`, `post-push`, and/or `pre-rewrite` hooks, where `<replace me>` is replaced with `commit`, `merge`, `push`, and `rewrite`, respectively.
 
     But you can be as complex as you want. Git's hooks and your shell scripting skill are the limit.
 
@@ -169,7 +169,7 @@ git activity record <log message>
 
 Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS UTC-offset`), log message (typically an identifier of the type of activity, e.g. "commit", "rewrite") regex pattern, repo name regex pattern, the checked out branch's name regex pattern, the checked out commit's message regex pattern, and the checked out commit's SHA regex pattern.[^1]
 
-- If you have [automatic recording set up](#set-up-automatic-recording), go about your daily work, creating branches, committing, rebasing, etc., and entries will be added to the log file for you.
+- If you have [automatic recording set up](#set-up-automatic-recording), go about your daily work, creating branches, committing, merging, rebasing, etc., and entries will be added to the log file for you.
 
 - If you don't have automatic recording set up, run manually record activity:
 

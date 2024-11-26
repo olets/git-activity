@@ -65,6 +65,7 @@ __git_activity_install() {
   hook_cmds=(
     ["post-checkout"]='git activity record-post-checkout "$@"'
     ["post-commit"]="git activity record commit"
+    ["post-merge"]="git activity record merge"
     ["post-rewrite"]="git activity record rewrite"
     ["pre-push"]="git activity record push"
   )
