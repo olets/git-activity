@@ -92,7 +92,7 @@ __git_activity_record() {
 
   'builtin' 'printf' "$date	$log_message	$repo	$branch	$commit_message	$sha\\n" >> "$GIT_ACTIVITY_CSV_PATH"
 
-  'builtin' 'printf' "git-activity: \`%s\` recorded\\n" "$log_message"
+  'builtin' 'printf' "git-activity: '%s' recorded\\n" "$log_message"
 }
 
 __git_activity_show() {
