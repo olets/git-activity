@@ -28,6 +28,19 @@ Useful for
     git activity --commit-message-pattern='(card.*pay)|(pay.*card)'
     ```
 
+## Quick start
+
+```shell
+> brew install olets/tap/git-activity
+# close the terminal
+# open a new terminal
+> git activity install # just once
+# go about your day
+> git activity show
+```
+
+And then read up on all the ways you can filter `git activity show`: [Usage&nbsp;>&nbsp;Show&nbsp;activity](#show-activity).
+
 ## Installation
 
 ### With Homebrew
@@ -146,83 +159,87 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
 
 ## Usage
 
-1. `git activity record`: Record some Git activity.
+### Record activity
+
+`git activity record`: Record some Git activity.
+
+```shell
+git activity record <log message>
+```
+
+Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS UTC-offset`), log message (typically an identifier of the type of activity, e.g. "commit", "rewrite") regex pattern, repo name regex pattern, the checked out branch's name regex pattern, the checked out commit's message regex pattern, and the checked out commit's SHA regex pattern.[^1]
+
+- If you have [automatic recording set up](#set-up-automatic-recording), go about your daily work, creating branches, committing, rebasing, etc., and entries will be added to the log file for you.
+
+- If you don't have automatic recording set up, run manually record activity:
 
     ```shell
-    git activity record <log message>
+    git activity record "starting issue #1"
+    # hack hack
+    git activity record "finished issue #1"
     ```
 
-    Adds a new row to `git-activity`'s CSV log file with: date (`YYYY-MM-DD HH:MM:SS UTC-offset`), log message (typically an identifier of the type of activity, e.g. "commit", "rewrite") regex pattern, repo name regex pattern, the checked out branch's name regex pattern, the checked out commit's message regex pattern, and the checked out commit's SHA regex pattern.[^1]
+    (Doesn't that make you want to set up automatic recording?)
 
-    - If you have [automatic recording set up](#set-up-automatic-recording), go about your daily work, creating branches, committing, rebasing, etc., and entries will be added to the log file for you.
+### Show activity
 
-    - If you don't have automatic recording set up, run manually record activity:
+`git activity show`: Review Git activity.
 
-        ```shell
-        git activity record "starting issue #1"
-        # hack hack
-        git activity record "finished issue #1"
-        ```
+```shell
+git activity show [<date> | ([--date=<date>] [--log-message-pattern=<log message pattern>] [--repo-pattern=<repo pattern>] [--branch-pattern=<branch pattern>] [--commit-message-pattern=<commit message pattern>] [--sha-pattern=<7-character commit SHA pattern>])]
+```
 
-        (Doesn't that make you want to set up automatic recording?)
+Use a terminal pager to display the log file's data, optionally filtered.
 
-1. `git activity show`: Review Git activity.
+- Show it **all**:
 
     ```shell
-    git activity show [<date> | ([--date=<date>] [--log-message-pattern=<log message pattern>] [--repo-pattern=<repo pattern>] [--branch-pattern=<branch pattern>] [--commit-message-pattern=<commit message pattern>] [--sha-pattern=<7-character commit SHA pattern>])]
+    git activity show
     ```
 
-    Use a terminal pager to display the log file's data, optionally filtered.
+- Filter by **day**:
 
-    - Show it **all**:
+    By **YYYY-MM-DD**:
 
-        ```shell
-        git activity show
-        ```
+    ```shell
+    git activity show 2024-01-01 # or `git activity show --date 2024-01-01`
+    ```
 
-    - Filter by **day**:
+    or by **name**:
 
-        By **YYYY-MM-DD**:
+    ```shell
+    git activity show today # or `git activity show --date today`
+    git activity show yesterday # or `git activity show --date yesterday`
+    git activity show "last monday" # or `git activity show --date "last monday"`
+    ```
 
-        ```shell
-        git activity show 2024-01-01 # or `git activity show --date 2024-01-01`
-        ```
+- Filter by **any combination** of date, log message regex pattern, repo regex pattern, branch regex pattern, commit message regex pattern, and 7-character commit SHA regex pattern.[^1]
 
-        or by **name**:
+    ```shell
+    # what progress did I make on assignments yesterday?
+    git activity show yesterday --commit-message-pattern='feat\\('
 
-        ```shell
-        git activity show today # or `git activity show --date today`
-        git activity show yesterday # or `git activity show --date yesterday`
-        git activity show "last monday" # or `git activity show --date "last monday"`
-        ```
+    # what did I do on this project last week?
+    git activity show "last week monday" --repo-pattern=my-cool-project
+    ```
 
-    - Filter by **any combination** of date, log message regex pattern, repo regex pattern, branch regex pattern, commit message regex pattern, and 7-character commit SHA regex pattern.[^1]
+    > [!NOTE]
+    > All values except for `<date>` are treated as regular expressions
 
-        ```shell
-        # what progress did I make on assignments yesterday?
-        git activity show yesterday --commit-message-pattern='feat\\('
-
-        # what did I do on this project last week?
-        git activity show "last week monday" --repo-pattern=my-cool-project
-        ```
-
-        > [!NOTE]
-        > All values except for `<date>` are treated as regular expressions
-
-        ```shell
-        % ls ~/Projects
-        afronted
-        org-1--front
-        org-1--back
-        org-2--front
-        org-2--back
-        # activity recorded in all `org-1` repos
-        % git activity show --repo-pattern=org-1
-        # activity recorded in `org-1--front`, `org-2--front`, and `afronted`
-        % git activity show --repo-pattern=front
-        # activity recorded in `org-1--front` and `org-2--front`
-        % git activity show --repo-pattern='--front'
-        ```
+    ```shell
+    % ls ~/Projects
+    afronted
+    org-1--front
+    org-1--back
+    org-2--front
+    org-2--back
+    # activity recorded in all `org-1` repos
+    % git activity show --repo-pattern=org-1
+    # activity recorded in `org-1--front`, `org-2--front`, and `afronted`
+    % git activity show --repo-pattern=front
+    # activity recorded in `org-1--front` and `org-2--front`
+    % git activity show --repo-pattern='--front'
+    ```
 
 ## Options
 
