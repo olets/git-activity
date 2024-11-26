@@ -25,7 +25,7 @@ Useful for
 - Finding that time you solved a problem similar to the one you're working on now
 
     ```shell
-    git activity --commit-message '(card.*pay)|(pay.*card)'
+    git activity --commit-message='(card.*pay)|(pay.*card)'
     ```
 
 ## Set up automatic recording
@@ -108,7 +108,7 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
 1. `git activity show`: Review Git activity.
 
     ```shell
-    git activity show [<date> | ([--date <date>] [--log-message <log message>] [--repo <repo>] [--branch <branch>] [--commit-message <commit message>] [--sha <commit SHA>])]
+    git activity show [<date> | ([--date=<date>] [--log-message=<log message>] [--repo=<repo>] [--branch=<branch>] [--commit-message=<commit message>] [--sha=<commit SHA>])]
     ```
 
     Use a terminal pager to display the log file's data, optionally filtered.
@@ -139,10 +139,10 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
 
         ```shell
         # what progress did I make on assignments yesterday?
-        git activity show yesterday --commit-message 'feat\\('
+        git activity show yesterday --commit-message='feat\\('
 
         # what did I do on this project last week?
-        git activity show "last week monday" --repo my-cool-project
+        git activity show "last week monday" --repo=my-cool-project
         ```
 
         > [!NOTE]
@@ -156,11 +156,11 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
         org-2--front
         org-2--back
         # activity recorded in all `org-1` repos
-        % git activity show --repo org-1
+        % git activity show --repo=org-1
         # activity recorded in `org-1--front`, `org-2--front`, and `afronted`
-        % git activity show --repo front
+        % git activity show --repo=front
         # activity recorded in `org-1--front` and `org-2--front`
-        % git activity show --repo '--front'
+        % git activity show --repo='--front'
         ```
 
 ## Options

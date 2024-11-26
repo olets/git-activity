@@ -96,7 +96,7 @@ __git_activity_record() {
 }
 
 __git_activity_show() {
-  local date_format log_date tmp_csv tmp_dir
+  local date_format log_date tmp_csv tmp_dir value
   local -A filters
   local -i has_filters
 
@@ -114,33 +114,42 @@ __git_activity_show() {
   )
 
   while (( $# )); do
+    value=
+
     case "$1" in
-      --date)
-        filters["date"]=$('command' 'gdate' "$date_format" -d "$2")
-        'builtin' 'shift' 2
+      --date=*)
+        value="${1:7}"
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
+        'builtin' 'shift'
         ;;
-      --log-message)
-        filters["log_message"]="$2"
-        'builtin' 'shift' 2
+      --log-message=*)
+        value="${1:14}"
+        filters["log_message"]="$value"
+        'builtin' 'shift'
         ;;
-      --repo)
-        filters["repo"]="$2"
-        'builtin' 'shift' 2
+      --repo=*)
+        value="${1:7}"
+        filters["repo"]="$value"
+        'builtin' 'shift'
         ;;
-      --branch)
-        filters["branch"]="$2"
-        'builtin' 'shift' 2
+      --branch=*)
+        value="${1:9}"
+        filters["branch"]="$value"
+        'builtin' 'shift'
         ;;
-      --commit-message)
-        filters["commit_message"]="$2"
-        'builtin' 'shift' 2
+      --commit-message=*)
+        value="${1:17}"
+        filters["commit_message"]="$value"
+        'builtin' 'shift'
         ;;
-      --sha)
-        filters["sha"]="$2"
-        'builtin' 'shift' 2
+      --sha=*)
+        value="${1:6}"
+        filters["sha"]="$value"
+        'builtin' 'shift'
         ;;
       *)
-        filters["date"]=$('command' 'gdate' "$date_format" -d "$1")
+        value="$1"
+        filters["date"]=$('command' 'gdate' "$date_format" -d "$value")
         'builtin' 'shift'
         ;;
     esac

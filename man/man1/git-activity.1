@@ -7,7 +7,7 @@ git-random \- build random-content Git trees quickly
 
 \fBgit activity record\fR \fI\<log message\>\fR
 
-\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date\fR \fI\<date\>\fR] [\fB--log-message\fR \fI\<log message\>\fR] [\fB--repo\fR \fI\<repo\>\fR] [\fB--branch \fI\<branch\>\fR] [\fB--commit-message\fR \fI\<commit message\>\fR] [\fB--sha\fR \fI\<commit SHA\>\fR])]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message=\fR\fI\<log message\>\fR] [\fB--repo=\fR\fI\<repo\>\fR] [\fB--branch=\fI\<branch\>\fR] [\fB--commit-message=\fR\fI\<commit message\>\fR] [\fB--sha=\fR\fI\<commit SHA\>\fR])]
 
 \fBgit activity install\fR
 
@@ -40,7 +40,7 @@ N.B: this has a false negative when creating a branch the name of which
 you have used before recently enough for it to still be in the reflog.
 
 .IP \(bu
-\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date\fR \fI\<date\>\fR] [\fB--log-message\fR \fI\<log message\>\fR] [\fB--repo\fR \fI\<repo\>\fR] [\fB--branch \fI\<branch\>\fR] [\fB--commit-message\fR \fI\<commit message\>\fR] [\fB--sha\fR \fI\<commit SHA\>\fR])]
+\fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message=\fR\fI\<log message\>\fR] [\fB--repo=\fR\fI\<repo\>\fR] [\fB--branch=\fI\<branch\>\fR] [\fB--commit-message=\fR\fI\<commit message\>\fR] [\fB--sha=\fR\fI\<commit SHA\>\fR])]
 
 Show the recorded activity, optionally filtered by date, activity type (e.g. commit, branch creation, etc), repo name, branch name, commit message, and/or commit SHA.
 
