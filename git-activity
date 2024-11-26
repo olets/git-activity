@@ -152,6 +152,10 @@ __git_activity_show() {
         filters["sha"]="$value"
         'builtin' 'shift'
         ;;
+      -*)
+        'builtin' 'printf' "Unsupported option %s\n" "$1"
+        return 3
+        ;;
       *)
         if ! $'command' -v gdate &>/dev/null; then
           'builtin' 'printf' "Requires \`gdate\`. Installation method varies by OS. It's distributed as part of \`coreutils\`.\\nAborting."
