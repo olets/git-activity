@@ -196,30 +196,61 @@ __git_activity_show() {
         fi
         'builtin' 'shift'
         ;;
+      --date|\
+      --date-pattern=*|\
+      --date-pattern)
+        _git_activity_api_error "--date=<date>"
+        # exits
+        ;;
       --log-message-pattern=*)
         value="${1:22}"
         filters["log_message"]="$value"
         'builtin' 'shift'
+        ;;
+      --log-message|\
+      --log-message-pattern)
+        _git_activity_api_error "--log-message-pattern=<pattern>"
+        # exits
         ;;
       --repo-pattern=*)
         value="${1:15}"
         filters["repo"]="$value"
         'builtin' 'shift'
         ;;
+      --repo|\
+      --repo-pattern)
+        _git_activity_api_error "--repo-pattern=<pattern>"
+        # exits
+        ;;
       --branch-pattern=*)
         value="${1:17}"
         filters["branch"]="$value"
         'builtin' 'shift'
+        ;;
+      --branch|\
+      --branch-pattern)
+        _git_activity_api_error "--branch-pattern=<pattern>"
+        # exits
         ;;
       --commit-message-pattern=*)
         value="${1:25}"
         filters["commit_message"]="$value"
         'builtin' 'shift'
         ;;
+      --commit-message|\
+      --commit-message-pattern)
+        _git_activity_api_error "--commit-message-pattern=<pattern>"
+        # exits
+        ;;
       --sha-pattern=*)
         value="${1:14}"
         filters["sha"]="$value"
         'builtin' 'shift'
+        ;;
+      --sha|\
+      --sha-pattern)
+        _git_activity_api_error "--sha-pattern=<pattern>"
+        # exits
         ;;
       -*)
         'builtin' 'printf' "Unsupported option %s\n" "$1"
@@ -288,6 +319,11 @@ __git_activity_show() {
   'command' 'rm' "$tmp_csv"
 }
 
+_git_activity_api_error() {
+  'builtin' 'printf' "Unsupported option. Did you mean \`%s\`?\\n" "$1"
+  exit
+}
+
 __git_activity_version() {
   'builtin' 'printf' "1.0.2\\n"
 }
@@ -343,6 +379,42 @@ main() {
     -v)
       __git_activity_version
       return
+      ;;
+    --date|\
+    --date-pattern=*|\
+    --date-pattern)
+      _git_activity_api_error "show --date=<date>"
+      # exits
+      ;;
+    --log-message|\
+    --log-message-pattern=*|\
+    --log-message-pattern)
+      _git_activity_api_error "show --log-message-pattern=<pattern>"
+      # exits
+      ;;
+    --repo|\
+    --repo-pattern=*|\
+    --repo-pattern)
+      _git_activity_api_error "show --repo-pattern=<pattern>"
+      # exits
+      ;;
+    --branch|\
+    --branch-pattern=*|\
+    --branch-pattern)
+      _git_activity_api_error "show --branch-pattern=<pattern>"
+      # exits
+      ;;
+    --commit-message|\
+    --commit-message-pattern=*|\
+    --commit-message-pattern)
+      _git_activity_api_error "show --commit-message-pattern=<pattern>"
+      # exits
+      ;;
+    --sha-pattern|\
+    --sha-pattern-pattern=*|\
+    --sha-pattern-pattern)
+      _git_activity_api_error "show --sha-pattern-pattern=<pattern>"
+      # exits
       ;;
     *)
       'builtin' 'printf' "Error: Unsupported option %s\\n" "$1"
