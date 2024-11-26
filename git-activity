@@ -53,8 +53,14 @@ __git_activity_record_post_checkout() {
 
   first_appearance_in_reflog=false
   no_tracking_branch=false
+  
+  # For backwards compatability with the author's previous system
+  if [[ "$4" == "force" ]]; then
+    __git_activity_record create
+    return
+  fi
 
-  if (( "$#" != 3 )); then
+  if (( "$#" < 3 )); then
     return
   fi
 
