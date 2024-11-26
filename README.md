@@ -110,21 +110,25 @@ Users of shells **other than zsh** may be able to install git-random as a plugin
 > **Recommended**
 
 > [!WARNING]  
-> Does not check to see if you've already installed this. If you notice duplicative entries in your git-activity log, check your global `init.templatedir` hooks, and the `.git` hooks in any repos you've run `git init` in
+> Does not check to see if you've already run the install. If you notice duplicative entries in your git-activity log, check your global `init.templatedir` hooks, and the `.git` hooks in any repos you've run `git init` in
 
 To configure Git to record all `git commit`s, `git commit --amend`s, `git merge`s, `git push`es, `git rebase`s, and most `git checkout -b`/`git switch -c`, run
 
 ```shell
-git activity install
+git activity install [--global]
 ```
 
-That will
+If run from a Git repo root, that will add Git hooks. If a hook file already exists, the command is appended to it.
 
-1. Configure Git's global `init.templatedir`, if not already configured. Files in this directory are automatically silently copied to every repo you run `git init` in.
-    - If `XDG_CONFIG_HOME` is defined and the global Git `init.templatedir` is not defined, Git's global `init.templatedir` will be configured as `$XDG_CONFIG_HOME/.config/git-templates`
-    - Otherwise, if `XDG_CONFIG_HOME` is not defined and the global Git `init.templatedir` is not defined, Git's global `init.templatedir` will be configured as `$HOME/.config/git-templates`
-1. Add a `hooks` directory to Git's global `init.templatedir` if it does not exist already.
-1. Create or add to the `hooks` directory's `post-checkout`, `post-commit`, `git merge`, `post-rewrite`, and `pre-push` files.
+If `--global` is passed, hooks are added to Git's `init.templatedir`. (If a hook file already exists, the command is appended to it.) Now running `git init` for the first time in any directory will add the hooks to the new repo. (If `init.templatedir` is not already configured, it will be set to `$XDG_CONFIG_HOME/.config/git-templates` if `XDG_CONFIG_HOME` is defined, or to `$HOME/.config/git-templates` if `XDG_CONFIG_HOME` is not defined.)
+
+Hook | Command
+---|---
+post-checkout | `git activity record-post-checkout "$@"`
+post-commit | `git activity record commit`
+post-merge | `git activity record merge`
+post-rewrite | `git activity record rewrite`
+pre-push | `git activity record push`
 
 ### Manual
 
@@ -141,21 +145,7 @@ In a Git repo's `.git` directory, or in your global Git `init.templatedir`
 
 1. Add a `git-activity` command to the file.
 
-    A good starting point is to run
-    
-    ```shell
-    git activity record-post-checkout "$@"
-    ```
-    
-    for `post-checkout` hooks, and/or
-    
-    ```shell
-    git activity record <replace me>
-    ```
-
-    for `post-commit`, `git merge`, `post-push`, and/or `pre-rewrite` hooks, where `<replace me>` is replaced with `commit`, `merge`, `push`, and `rewrite`, respectively.
-
-    But you can be as complex as you want. Git's hooks and your shell scripting skill are the limit.
+Good starting points are [the hooks defined by `git activity install`](#automated). But you can be as complex as you want. Git's hooks and your shell scripting skill are the limit.
 
 ## Usage
 

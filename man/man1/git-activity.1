@@ -9,7 +9,7 @@ git-activity \- Record and show your Git activity across multiple (or all) repos
 
 \fBgit activity show\fR [\fI\<date\>\fR | ([\fB--date=\fR\fI\<date\>\fR] [\fB--log-message-pattern=\fR\fI\<pattern\>\fR] [\fB--repo-pattern=\fR\fI\<pattern\>\fR] [\fB--branch=\fI\<pattern\>\fR] [\fB--commit-message-pattern=\fR\fI\<pattern\>\fR] [\fB--sha-pattern=\fR\fI\<pattern\>\fR])]
 
-\fBgit activity install\fR
+\fBgit activity install\fR [\fB--global\fR]
 
 \fBgit activity\fR (\fBhelp\fR | \fB--help\fR)
 
@@ -47,9 +47,11 @@ you have used before recently enough for it to still be in the reflog.
 Show the recorded activity, optionally filtered by date, activity type (e.g. commit, branch creation, etc), repo name, branch name, commit message, and/or commit SHA.
 
 .IP \(bu
-\fBgit activity\fR \fBinstall\fR
+\fBgit activity install\fR [\fB--global\fR]
 
-Configures Git's global init.templatedir, and adds hooks to it.
+If run from a Git repo root, adds Git hooks to the repo. If a hook file already exists, the command is appended to it.
+
+If \fB--global\fR is passed, hooks are added to Git's \fBinit.templatedir\fR. (If a hook file already exists, the command is appended to it.) Now running \fBgit init\fR for the first time in any directory will add the hooks to the new repo. (If \fBinit.templatedir\fR is not already configured, it will be set to \fB$XDG_CONFIG_HOME/.config/git-templates\fR if \fBXDG_CONFIG_HOME\fR is defined, or to \fB$HOME/.config/git-templates\fR if \fBXDG_CONFIG_HOME\fR is not defined.)
 
 .IP \(bu
 \fBgit activity\fR (\fBhelp\fR | \fB--help\fR)

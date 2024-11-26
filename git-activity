@@ -59,26 +59,51 @@ __git_activity_date() {
 }
 
 __git_activity_install() {
+  local -i global
   local -A hook_cmds
   local hooks_dir template_dir
+
+  global=0
+
+  if (( $# > 1 )); then
+    'builtin' 'shift'
+    'builtin' 'printf' "Unsupported option \`%s\`\\n" "$*"
+    return 3
+  fi
+
+  if [[ "$1" == "--global" ]]; then
+    global=1
+  elif (( $# )); then
+    'builtin' 'printf' "Unsupported option \`%s\`\\n" "$*"
+    return 3
+  fi
 
   hook_cmds=(
     ["post-checkout"]='git activity record-post-checkout "$@"'
     ["post-commit"]="git activity record commit"
     ["post-merge"]="git activity record merge"
-    ["post-rewrite"]="git activity record rewrite"
     ["pre-push"]="git activity record push"
+    ["post-rewrite"]="git activity record rewrite"
   )
 
-  template_dir=$('command' 'git' config --global init.templatedir)
-  
-  [[ -z $template_dir ]] && {
-    template_dir="${${XDG_CONFIG_HOME:+${XDG_CONFIG_HOME%/}}:-$HOME/.config}/git-templates"
-    'command' 'git' config --global init.templatedir $template_dir
-    'builtin' 'printf' "Configured the global \`git init\` template directory to be %s" "$template_dir"
-  }
+  if (( global )); then
+    template_dir=$('command' 'git' config --global init.templatedir)
 
-  template_dir=$('builtin' 'echo' "echo $template_dir" | 'command' 'bash')
+    [[ -z $template_dir ]] && {
+      template_dir="${${XDG_CONFIG_HOME:+${XDG_CONFIG_HOME%/}}:-$HOME/.config}/git-templates"
+      'command' 'git' config --global init.templatedir $template_dir
+      'builtin' 'printf' "Configured the global \`git init\` template directory to be %s" "$template_dir"
+    }
+
+    template_dir=$('builtin' 'echo' "echo $template_dir" | 'command' 'bash')
+  else
+    template_dir="${PWD%/}/.git"
+
+    if [[ ! -d "$template_dir" ]]; then
+      'builtin' 'printf' "Not a Git repo root\\n"
+      return 4
+    fi
+  fi
   
   hooks_dir=${template_dir}/hooks
 
@@ -92,6 +117,7 @@ __git_activity_install() {
       'builtin' 'printf' "\\n# Added by \`git activity install\`\\n# https://github.com/olets/git-activity\\n" >> "${hooks_dir}/$hook"
 
       'builtin' 'printf' "%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+      'builtin' 'printf' "Appended to %s hook in %s\\n" "$hook" "$hooks_dir"
     else
       'command' 'touch' "${hooks_dir}/$hook"
       'command' 'chmod' +x "${hooks_dir}/$hook"
@@ -102,10 +128,9 @@ __git_activity_install() {
       'builtin' 'printf' "\\n# Added by \`git activity install\`\\n# https://github.com/olets/git-activity\\n" >> "${hooks_dir}/$hook"
 
       'builtin' 'printf' "%s\\n" "${hook_cmds[$hook]}" >> "${hooks_dir}/$hook"
+      'builtin' 'printf' "Created %s hook in %s\\n" "$hook" "$hooks_dir"
     fi
   done
-
-  'builtin' 'printf' "Added hooks in %s\\n" "$hooks_dir"
 }
 
 __git_activity_record_post_checkout() {
@@ -358,7 +383,8 @@ main() {
       return
       ;;
     install)
-      __git_activity_install
+      'builtin' 'shift'
+      __git_activity_install "$@"
       return
       ;;
     record)
