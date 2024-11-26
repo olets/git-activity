@@ -346,8 +346,8 @@ __git_activity_show() {
     'command' 'column' -ts '	' | \
     # Number lines starting with zero
     'command' 'nl' -v 0 | \
-    # Use the pager
-    'command' 'less' -QS
+    # Use the pager, with numbered lines, ctrl-c closes, no bell, horizontal overflow
+    'command' 'less' -KQS
 
   'command' 'rm' "$tmp_csv"
 }
