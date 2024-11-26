@@ -267,6 +267,12 @@ main() {
     'builtin' 'echo' "$__git_activity_heading" > "$GIT_ACTIVITY_CSV_PATH"
   fi
 
+  if (( ! $# )); then
+    'builtin' 'printf' "Error: Specify a subcommand.\\n"
+    return 2
+  fi
+
+
   case "$1" in
     --help|\
     help)
