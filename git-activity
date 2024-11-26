@@ -329,10 +329,7 @@ __git_activity_show() {
     '$1~date_pattern && $2~log_message_pattern && $3~repo_pattern && $4~branch_pattern && $5~commit_message_pattern && $6~sha_pattern'
   )
     
-  if [[ -z "$results" ]]; then
-    'builtin' 'printf' "Error: No matching Git activity recorded %s\\n" "$*"
-    return
-  fi
+  [[ -z "$results" ]] && return
 
   # Append the header
   'builtin' 'printf' "%s\\n" "$results_key" >> "$tmp_csv"
