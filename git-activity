@@ -58,6 +58,15 @@ __git_activity_date() {
   return "$?"
 }
 
+__git_activity_git_dir() {
+  if [[ -d .git ]]; then
+    echo ".git"
+    return
+  fi
+  
+  git rev-parse --git-dir 2>/dev/null
+}
+
 __git_activity_install() {
   local -i global
   local -A hook_cmds
@@ -97,10 +106,11 @@ __git_activity_install() {
 
     template_dir=$('builtin' 'echo' "echo $template_dir" | 'command' 'bash')
   else
-    template_dir="${PWD%/}/.git"
 
-    if [[ ! -d "$template_dir" ]]; then
-      'builtin' 'printf' "Not a Git repo root\\n"
+    template_dir=$(__git_activity_git_dir)
+    if [[ -z "$template_dir" ]]; then
+      # DUPE
+      'builtin' 'printf' "Not in a Git repo\\n"
       return 4
     fi
   fi
