@@ -147,6 +147,12 @@ __git_activity_record_post_checkout() {
   # N.B: means `git switch -c new && git checkout - && git switch -c new`
   #  only registers the first creation
 
+  if ! __git_activity_git_dir &>/dev/null; then
+    # DUPE
+    'builtin' 'printf' "Not in a Git repo\\n"
+    return 4
+  fi
+
   local first_appearance_in_reflog no_tracking_branch
 
   first_appearance_in_reflog=false
