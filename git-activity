@@ -296,13 +296,6 @@ __git_activity_show() {
     esac
   done
 
-  if (( ! has_filters )); then
-    'command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | \
-      'command' 'column' -ts '	' | \
-      'command' 'nl' -v 0 | \
-      'command' 'less' -QS
-    return
-  fi
 
   tmp_dir="${TMPDIR:-/tmp}"
   tmp_dir="${tmp_dir%/}/git-activity/"
@@ -312,15 +305,20 @@ __git_activity_show() {
 
   local results
 
-  results=$('command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | 'command' 'awk' -F'\t' \
+  results=$('command' 'cat' "$GIT_ACTIVITY_CSV_PATH" | \
+    # Trim CSV header
+    'command' 'tail' -n +2 |\
+  )
+
+  (( has_filters )) && results=$(echo "$results" | 'command' 'awk' -F'\t' \
     -v date_pattern="^${filters[date]}" \
     -v log_message_pattern="${filters[log_message]}" \
     -v repo_pattern="${filters[repo]}" \
     -v branch_pattern="${filters[branch]}" \
     -v commit_message_pattern="${filters[commit_message]}" \
     -v sha_pattern="${filters[sha]}" \
-    '$1~date_pattern && $2~log_message_pattern && $3~repo_pattern && $4~branch_pattern && $5~commit_message_pattern && $6~sha_pattern' \
-    )
+    '$1~date_pattern && $2~log_message_pattern && $3~repo_pattern && $4~branch_pattern && $5~commit_message_pattern && $6~sha_pattern'
+  )
     
   if [[ -z "$results" ]]; then
     'builtin' 'printf' "Error: No matching Git activity recorded %s\\n" "$*"
