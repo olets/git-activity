@@ -1,25 +1,25 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
-layout: home
-
-hero:
-  name: "git-activity"
-  text: "Record and show your Git activity across multiple (or all) repos, optionally filtered"
-  tagline: My great project tagline
-  actions:
-    - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
-    - theme: alt
-      text: API Examples
-      link: /api-examples
-
-features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+titleTemplate: :title # see also VitePress config
 ---
 
+# git-activity
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/olets/git-activity) ![GitHub commits since latest release](https://img.shields.io/github/commits-since/olets/git-activity/latest)
+
+![git-activity splash card](/git-activity-card.png)
+
+Record and show your Git activity across multiple (or all) repos, optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.[^1]
+
+It's sort of like a global `git log` where you control which repos are watched and what types of activity are recorded. 
+
+Useful for
+
+- retroactively filling out a time sheet, or correcting a time sheet when you realize you left one timer running all day
+
+- answering a weekly department "What projects did you work on last week and what did you do on them?" prompt
+
+- finding that time you solved a problem similar to the one you're working on now
+
+and more!
+
+[^1]: Specifically, `awk` regex patterns.
