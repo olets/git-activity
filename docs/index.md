@@ -22,4 +22,6 @@ Useful for
 
 and more!
 
+The log is stored in a text file. You can run your own programs on it if the git-activity CLI doesn't meet your needs, and you can share it across your computers for a cross-repo cross-machine log.
+
 [^1]: Specifically, `awk` regex patterns.

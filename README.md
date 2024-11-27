@@ -12,6 +12,8 @@ Useful for
 
 - finding that time you solved a problem similar to the one you're working on now
 
+The log is stored in a text file. You can run your own programs on it if the git-activity CLI doesn't meet your needs, and you can share it across your computers for a cross-repo cross-machine log.
+
 ## Quick start
 
 ```shell
