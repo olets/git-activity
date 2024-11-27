@@ -8,7 +8,7 @@ titleTemplate: :title # see also VitePress config
 
 ![git-activity splash card](/git-activity-card.png)
 
-Record and show your Git activity across multiple (or all) repos, optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.[^1]
+Record your Git activity across multiple (or all) repos, and read it optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.[^1]
 
 It's sort of like a global `git log` where you control which repos are watched and what types of activity are recorded. 
 

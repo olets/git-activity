@@ -172,7 +172,7 @@ export default defineConfig({
   ],
   title: TITLE,
   description:
-    "Record and show your Git activity across multiple (or all) repos, optionally filtered",
+    "Cross-repo customizable Git activity log dotfile with CLI for viewing and filtering entries",
   // https://vitepress.dev/reference/site-config#titletemplate
   titleTemplate: `:title :: ${TITLE}`, // to change delimiter from default pipe to play nice with Fathom event id format. see also homepage frontmatter
   // https://vitepress.dev/reference/default-theme-last-updated
