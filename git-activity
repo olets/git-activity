@@ -8,7 +8,7 @@
 'builtin' 'export' GIT_ACTIVITY_LOG_FILE="${GIT_ACTIVITY_LOG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/git-activity/git-activity.csv}"
 
 __git_activity_check_dependencies() {
-  local -a dependencies
+  local -a coreutils_dependencies dependencies
   local dependency
   local -i ret
   
@@ -19,8 +19,9 @@ __git_activity_check_dependencies() {
     git
     less
     man
+  )
 
-    # coreutils dependencies
+  coreutils_dependencies=(
     basename
     cat
     chmod
@@ -31,22 +32,29 @@ __git_activity_check_dependencies() {
     tac
     touch
     wc
-    
-    # additional dependencies with special requirements: GNU date
   )
+
+  # additional dependencies with special requirements: GNU date
 
   ret=0
 
   for dependency in "${dependencies[@]}"; do
     if ! 'command' -v "$dependency" &>/dev/null; then
       ret=1
-      'builtin' 'printf' "Missing dependency \`%s\`. See https://command-not-found.com/%s for installation instructions.\\n" "$dependency" "$dependency"
+      'builtin' 'printf' "Missing dependency \`%s\`. Installation method differs by OS.\\n"
+    fi
+  done
+
+  for dependency in "${coreutils_dependencies[@]}"; do
+    if ! 'command' -v "$dependency" &>/dev/null; then
+      ret=1
+      'builtin' 'printf' "Missing dependency \`%s\`. Install \`coreutils\`. Installation method differs by OS.\\n"
     fi
   done
 
   if ! 'command' 'date' '+%Y-%m-%d' -d today &>/dev/null && ! 'command' 'gdate' '+%Y-%m-%d' -d today &>/dev/null; then
     ret=1
-    'builtin' 'printf' "Missing dependency GNU \`date\`. See https://command-not-found.com/date for installation instructions.\\n"
+    'builtin' 'printf' "Missing dependency GNU \`date\`. Installing \`coreutils\` may be the solution. Installation method differs by OS.\\n"
   fi
 
   return "$ret"
