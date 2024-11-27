@@ -52,7 +52,7 @@ __git_activity_check_dependencies() {
     fi
   done
 
-  if ! 'command' 'date' '+%Y-%m-%d' -d today &>/dev/null && ! 'command' 'gdate' '+%Y-%m-%d' -d today &>/dev/null; then
+  if ! __git_activity_date today; then
     ret=1
     'builtin' 'printf' "Missing dependency GNU \`date\`. Installing \`coreutils\` may be the solution. Installation method differs by OS.\\n"
   fi
