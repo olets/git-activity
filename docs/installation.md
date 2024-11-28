@@ -45,7 +45,7 @@ exec zsh
 
 #### Other shells
 
-Users of shells **other than zsh** may be able to install git-random as a plugin. Check your plugin manager's documentation for support for installing commands.
+Users of shells **other than zsh** may be able to install git-activity as a plugin. Check your plugin manager's documentation for support for installing commands.
 
 ### Manual
 

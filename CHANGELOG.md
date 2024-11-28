@@ -59,6 +59,6 @@ Breaking changes, but one day into publishing and project hasn't been publicized
 Minor bugfixes and edge case handlings, and maintainer-specific "under the hood" features.
 
 
-# [v1.0.0-beta.1](https://github.com/olets/git-random/compare/initial...v1.0.0-beta.1) (2024-11-25)
+# [v1.0.0-beta.1](https://github.com/olets/git-activity/compare/initial...v1.0.0-beta.1) (2024-11-25)
 
 Initial public pre-release.
