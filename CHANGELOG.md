@@ -1,3 +1,17 @@
+## [1.1.1](https://github.com/olets/git-activity/compare/v1.1.0...v1.1.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* **install:** bash-friendly substitution pattern ([444a30d](https://github.com/olets/git-activity/commit/444a30de68338b6e1bd44eb57c89f177abc44167))
+
+
+### Features
+
+* **docs>social metas:** dynamic, same as title/description ([41588d3](https://github.com/olets/git-activity/commit/41588d3fd202b31fb2232947e30c8226ca7e8ce7))
+
+
+
 # [1.1.0](https://github.com/olets/git-activity/compare/v1.0.2...v1.1.0) (2024-11-26)
 
 Breaking changes, but one day into publishing and project hasn't been publicized yet.
