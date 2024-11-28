@@ -1,6 +1,6 @@
 # git-activity ![GitHub release (latest by date)](https://img.shields.io/github/v/release/olets/git-activity) ![GitHub commits since latest release](https://img.shields.io/github/commits-since/olets/git-activity/latest)
 
-**git-activity**: Record your Git activity across multiple (or all) repos, and read it optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.[^1]
+**git-activity**: Record your Git activity across multiple (or all) repos, and read it optionally filtered by date, activity type (e.g. commit, branch creation, etc) regex pattern, repo name regex pattern, branch name regex pattern, commit message regex pattern, and/or commit SHA (first seven characters) regex pattern.
 
 It's sort of like a global `git log` where you control which repos are watched and what types of activity are recorded. 
 
