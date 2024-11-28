@@ -106,7 +106,10 @@ __git_activity_install() {
     template_dir=$('command' 'git' config --global init.templatedir)
 
     [[ -z $template_dir ]] && {
-      template_dir="${${XDG_CONFIG_HOME:+${XDG_CONFIG_HOME%/}}:-$HOME/.config}/git-templates"
+      template_dir=$HOME/.config
+      [[ -n "$XDG_CONFIG_HOME" ]] && template_dir=${XDG_CONFIG_HOME%/}
+      template_dir+="/git-templates"
+      
       'command' 'git' config --global init.templatedir $template_dir
       'builtin' 'printf' "Configured the global \`git init\` template directory to be %s" "$template_dir"
     }
