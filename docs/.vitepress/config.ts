@@ -139,12 +139,6 @@ export default defineConfig({
         defer: "true",
       },
     ],
-    [
-      "script",
-      {
-        src: "/js/analytics.js",
-      },
-    ],
 
     // Font
     [
