@@ -28,7 +28,7 @@ export default defineConfig({
           name: "twitter:title",
           content: title,
         },
-      ]
+      ],
     );
 
     if (description) {
@@ -46,7 +46,7 @@ export default defineConfig({
             name: "twitter:description",
             content: description,
           },
-        ]
+        ],
       );
     }
   },
@@ -136,6 +136,14 @@ export default defineConfig({
         src: "https://cdn.usefathom.com/script.js",
         "data-site": "ZQLXAWMD",
         "data-spa": "auto",
+        defer: "true",
+      },
+    ],
+    [
+      "script",
+      {
+        src: "https://loose-saluki.pikapod.net/script.js",
+        "data-website-id": "d1bfa21e-d7ad-4284-803a-bda0e7ff6b89",
         defer: "true",
       },
     ],
